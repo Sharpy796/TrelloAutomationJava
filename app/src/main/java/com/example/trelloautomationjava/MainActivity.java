@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setUpDropdown() {
-        Spinner mySpinner = findViewById(R.id.my_spinner);
+        Spinner mySpinner = findViewById(R.id.spinner_list);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, LISTS);
         mySpinner.setAdapter(adapter);
