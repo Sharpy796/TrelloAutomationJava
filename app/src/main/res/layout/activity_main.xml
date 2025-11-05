@@ -8,14 +8,20 @@
     tools:context=".MainActivity">
 
     <TableRow>
+        <TextView android:text="Name:"/>
+        <EditText android:id="@+id/name"/>
+    </TableRow>
+
+    <TableRow>
+        <TextView android:text="Description:"/>
+        <EditText android:id="@+id/description"/>
+    </TableRow>
+
+    <TableRow>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="List:"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:text="List:"/>
         <Spinner
             android:id="@+id/spinner_list"
             android:layout_width="match_parent"
