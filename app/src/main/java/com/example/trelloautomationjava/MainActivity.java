@@ -1,7 +1,6 @@
 package com.example.trelloautomationjava;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -13,11 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -52,34 +46,27 @@ public class MainActivity extends AppCompatActivity {
 //        }
 
 
-        changeTextViewValueRandomlyOnButtonClick();
+        giveCreateCardButtonFunctionality();
 //        changeTextOnce();
         setUpDropdown();
     }
 
-    private void changeTextViewValueRandomlyOnButtonClick() {
-        final String[] manyDifferentStrings = LISTS;
+    private void giveCreateCardButtonFunctionality() {
+//        final String[] manyDifferentStrings = LISTS;
 
-        final TextView changingText = (TextView) findViewById(R.id.chosen_list_button);
-        Button changeTextButton = (Button) findViewById(R.id.chosen_list_button);
+//        final TextView changingText = (TextView) findViewById(R.id.chosen_list_button);
+        Button createCardButton = (Button) findViewById(R.id.chosen_list_button);
 
-        changeTextButton.setOnClickListener(new View.OnClickListener() {
+        createCardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                cardCreator.createTrelloCard("test", "Monday");
-                try {
-//                    String value = cardCreator.getItemFromJson(cardCreator.getLists(), "name", "Monday", "id");
-//                    Log.i(LOG_TAG, "Got lists");
-                    cardCreator.createTrelloCard("test", "Monday", "test");
-                } catch (RuntimeException e) {
-                    Log.e(LOG_TAG, e.toString());
-                }
-                int random = (int) (Math.random() * manyDifferentStrings.length);
-                if (random == oldValue) {
-                    random = (int) (Math.random() * manyDifferentStrings.length);
-                }
-                changingText.setText(manyDifferentStrings[random]);
-                oldValue = random;
+                cardCreator.createTrelloCard("test", "Monday", "test", new String[]{"TKE", "KoC"});
+//                int random = (int) (Math.random() * manyDifferentStrings.length);
+//                if (random == oldValue) {
+//                    random = (int) (Math.random() * manyDifferentStrings.length);
+//                }
+//                changingText.setText(manyDifferentStrings[random]);
+//                oldValue = random;
             }
         });
     }

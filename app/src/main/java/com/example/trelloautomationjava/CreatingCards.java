@@ -10,8 +10,13 @@ import androidx.annotation.NonNull;
 import org.json.*;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -46,7 +51,6 @@ public class CreatingCards {
         StrictMode.ThreadPolicy gfgPolicy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(gfgPolicy);
     }
-    JSONArray testGlobalJSON;
     /**
      *
      * @return A JSONArray file
@@ -78,20 +82,13 @@ public class CreatingCards {
         Call call = client.newCall(request);
         Log.i(LOG_TAG, call.toString());
         Response response = call.execute();
-        Log.i(LOG_TAG, response.body().string());
         return new JSONArray(response.body().string());
     }
 
     public String getItemFromJson(JSONArray json, String search_attr, String search_name, String return_attr) throws JSONException {
         JSONObject temp = null;
         for (int i = 0; i < json.length(); i++) {
-//            try {
             temp = json.getJSONObject(i);
-//            } catch (Exception e) {
-//                Log.e(LOG_TAG, e.toString());
-//            }
-//            Log.i(LOG_TAG, "Searching through json:\t"+temp.toString());
-//            Log.i(LOG_TAG, "What is search value?:\t"+temp.getString(search_attr));
             if (temp == null) {
                 Log.w(LOG_TAG, "did temp fail?");
             } else if (temp.getString(search_attr).equals(search_name)) {
@@ -116,6 +113,35 @@ public class CreatingCards {
         return null;
     }
 
+    public Stack getArrayFromJson(JSONArray json, String search_attr, String[] search_names, String return_attr) throws JSONException {
+        Stack newArray = new Stack();
+        JSONObject temp = null;
+        for (int i = 0; i < json.length(); i++) {
+            temp = json.getJSONObject(i);
+            if (temp == null) {
+                Log.w(LOG_TAG, "did temp fail?");
+            } else if (Arrays.asList(search_names).contains(temp.getString(search_attr))) {
+                Log.i(LOG_TAG, "Found return value:\t" + temp.getString(return_attr));
+                newArray.push(temp.getString(return_attr));
+            }
+        }
+        return newArray;
+    }
+
+    private String stackToString(Stack stack) {
+        String val = "";
+        boolean firstTime = true;
+        for (Object each : stack) {
+            if (!firstTime && each != "") {
+                val += ",";
+            }
+            firstTime = false;
+            val += each;
+        }
+        Log.i(LOG_TAG,"Converting stack to string:\t"+val);
+        return val;
+    }
+
     public void createTrelloCard(String name, String list, String desc, String[] labels, String dueDate) {
         try {
             fixStrictMode();
@@ -127,7 +153,7 @@ public class CreatingCards {
                     .add("idList",getItemFromJson(getLists(), "name", list, "id"))
                     .add("name", name)
                     .add("desc", desc)
-//                    .add("idLabels", getArrayFromJson(getLabels(), "name", labels, "id"))
+                    .add("idLabels", stackToString(getArrayFromJson(getLabels(), "name", labels, "id")))
 //                    .add("due", dueDate)
                     // TODO: Add checklist functionality
                     .build();
@@ -139,8 +165,13 @@ public class CreatingCards {
             Response response = call.execute();
             Log.i(LOG_TAG,"Card created!");
             Log.i(LOG_TAG,response.body().string());
-        } catch (IOException | RuntimeException | JSONException e) {
+        } catch (IOException | JSONException | RuntimeException e) {
             Log.e(LOG_TAG, "Failed creating card");
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            String sStackTrace = sw.toString(); // stack trace as a string
+            Log.e(LOG_TAG, sStackTrace);
             Log.e(LOG_TAG, e.toString());
         }
     }
