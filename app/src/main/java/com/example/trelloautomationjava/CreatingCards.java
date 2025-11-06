@@ -39,11 +39,6 @@ public class CreatingCards {
     public final String TRELLO_AUTH = "?key="+TRELLO_KEY+"&token="+TRELLO_TOKEN;
     public final String TRELLO_PLANNER_ID = "6040fb56e1cc44275b26b304";
     public final String TRELLO_LIST_MONDAY = "6040fb65d9906a3b4da09cbd";
-    public final String[] HOUR_ARR_STR = {"01","02","03","04","05","06","07","08","09","10","11","12"};
-//    publ c final String[]  MIN_ARR_STR = {"00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59"};
-    public final String[] MIN_ARR_STR = {"00","05","10","15","20","25","30","35","40","45","50","55"};
-    public final int[] HOUR_ARR_INT = {1,2,3,4,5,6,7,8,9,10,11,12};
-    public final int[] MIN_ARR_INT = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59};
     public final String LOG_TAG = "HELLO_WORLD";
     OkHttpClient client = new OkHttpClient();
 
@@ -121,6 +116,21 @@ public class CreatingCards {
             if (temp == null) {
                 Log.w(LOG_TAG, "did temp fail?");
             } else if (Arrays.asList(search_names).contains(temp.getString(search_attr))) {
+                Log.i(LOG_TAG, "Found return value:\t" + temp.getString(return_attr));
+                newArray.push(temp.getString(return_attr));
+            }
+        }
+        return newArray;
+    }
+
+    public Stack<String> getArrayFromJson(JSONArray json, String return_attr) throws JSONException {
+        Stack newArray = new Stack();
+        JSONObject temp = null;
+        for (int i = 0; i < json.length(); i++) {
+            temp = json.getJSONObject(i);
+            if (temp == null) {
+                Log.w(LOG_TAG, "did temp fail?");
+            } else {
                 Log.i(LOG_TAG, "Found return value:\t" + temp.getString(return_attr));
                 newArray.push(temp.getString(return_attr));
             }

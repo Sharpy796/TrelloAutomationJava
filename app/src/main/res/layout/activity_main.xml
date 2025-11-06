@@ -23,10 +23,10 @@
             android:layout_height="wrap_content"
             android:text="List:"/>
         <Spinner
-            android:id="@+id/spinner_list"
+            android:id="@+id/lists"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:drawable/btn_dropdown"
+            android:background="@color/cardview_dark_background"
             android:spinnerMode="dropdown" />
     </TableRow>
 
@@ -44,10 +44,28 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <Spinner
-            android:id="@+id/spinner_labels"
+            android:id="@+id/labels"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:drawable/btn_dropdown"
+            android:background="@color/cardview_dark_background"
+            android:spinnerMode="dropdown" />
+    </TableRow>
+
+    <TableRow>
+        <Spinner
+            android:id="@+id/hour"
+            android:textColor="#FF0000"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/cardview_dark_background"
+            android:spinnerMode="dropdown" />
+        <TextView
+            android:text=":"/>
+        <Spinner
+            android:id="@+id/min"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/cardview_dark_background"
             android:spinnerMode="dropdown" />
     </TableRow>
 

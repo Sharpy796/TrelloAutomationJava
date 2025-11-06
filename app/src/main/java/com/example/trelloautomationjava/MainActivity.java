@@ -13,6 +13,10 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import org.json.JSONException;
+
+import java.io.IOException;
+
 public class MainActivity extends AppCompatActivity {
 
 
@@ -21,6 +25,17 @@ public class MainActivity extends AppCompatActivity {
     public final String LOG_TAG = "HELLO_WORLD";
     CreatingCards cardCreator = new CreatingCards();
     final String[] LISTS = {"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday","Later"};
+
+    String[] STUFF = new String[1];
+    final String[] LABELS = cardCreator.getArrayFromJson(cardCreator.getLabels(), "name").toArray(STUFF);
+    public final String[] HOUR_ARR_STR = {"01","02","03","04","05","06","07","08","09","10","11","12"};
+//    public final String[]  MIN_ARR_STR = {"00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59"};
+    public final String[] MIN_ARR_STR = {"00","05","10","15","20","25","30","35","40","45","50","55"};
+    public final int[] HOUR_ARR_INT = {1,2,3,4,5,6,7,8,9,10,11,12};
+    public final int[] MIN_ARR_INT = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59};
+
+    public MainActivity() throws JSONException, IOException {
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,23 +47,13 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-//            Log.i(LOG_TAG, "success");
-//            Log.i(LOG_TAG, json.toString());
-//        try {
-//            Log.i("HELLO_WORLD", "trying");
-//            cardCreator.getItemFromJson(json, "name", "test");
-//            Log.i("HELLO_WORLD", "did it");
-//        } catch (JSONException e) {
-//            Log.e("HELLO_WORLD", "failed");
-//            Log.e("HELLO_WORLD", e.toString());
-//        } finally {
-//            Log.i("HELLO_WORLD", "tried");
-//        }
-
 
         giveCreateCardButtonFunctionality();
 //        changeTextOnce();
-        setUpDropdown();
+        setUpDropdown(R.id.lists, LISTS);
+        setUpDropdown(R.id.labels, LABELS);
+        setUpDropdown(R.id.hour, HOUR_ARR_STR);
+        setUpDropdown(R.id.min, MIN_ARR_STR);
     }
 
     private void giveCreateCardButtonFunctionality() {
@@ -83,10 +88,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void setUpDropdown() {
-        Spinner mySpinner = findViewById(R.id.spinner_list);
+    private void setUpDropdown(int id, String[] list) {
+        Spinner mySpinner = findViewById(id);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, LISTS);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, list);
         mySpinner.setAdapter(adapter);
     }
 }
