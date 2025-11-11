@@ -40,40 +40,40 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/labels"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:background="@android:drawable/editbox_background"
             android:drawableRight="@android:drawable/arrow_down_float"
             android:drawablePadding="16dp"
-            android:hint="Select Language"
+            android:hint="Select Lists"
             android:padding="12dp" />
-        <Spinner
-            android:id="@+id/labels"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/cardview_dark_background"
-            android:spinnerMode="dropdown"/>
+<!--        <Spinner-->
+<!--            android:id="@+id/labels"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@color/cardview_dark_background"-->
+<!--            android:spinnerMode="dropdown"/>-->
     </TableRow>
 
-    <TableRow>
-        <Spinner
-            android:id="@+id/hour"
-            android:textColor="#FF0000"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/cardview_dark_background"
-            android:spinnerMode="dropdown" />
-        <TextView
-            android:text=":"/>
-        <Spinner
-            android:id="@+id/min"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/cardview_dark_background"
-            android:spinnerMode="dropdown" />
-    </TableRow>
+<!--    <TableRow>-->
+<!--        <Spinner-->
+<!--            android:id="@+id/hour"-->
+<!--            android:textColor="#FF0000"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@color/cardview_dark_background"-->
+<!--            android:spinnerMode="dropdown" />-->
+<!--        <TextView-->
+<!--            android:text=":"/>-->
+<!--        <Spinner-->
+<!--            android:id="@+id/min"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@color/cardview_dark_background"-->
+<!--            android:spinnerMode="dropdown" />-->
+<!--    </TableRow>-->
     <Button
         android:id="@+id/chosen_list_button"
         android:layout_width="wrap_content"

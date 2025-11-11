@@ -1,6 +1,8 @@
 package com.example.trelloautomationjava;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -38,13 +40,11 @@ public class MainActivity extends AppCompatActivity {
     public final String[] MIN_ARR_STR = {"00","05","10","15","20","25","30","35","40","45","50","55"};
     public final int[] HOUR_ARR_INT = {1,2,3,4,5,6,7,8,9,10,11,12};
     public final int[] MIN_ARR_INT = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59};
-
+    final Handler CreateCardRunnableHandler = new Handler();
     ///
 
-    TextView textView;
-    boolean[] selectedLanguage;
-    ArrayList<Integer> langList = new ArrayList<>();
-    String[] langArray = {"Java", "C++", "Kotlin", "C", "Python", "Javascript"};
+//    boolean[] selecteditems;
+//    ArrayList<Integer> labelList = new ArrayList<>();
 
     ///
 
@@ -62,41 +62,51 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        ///////////
+        giveCreateCardButtonFunctionality();
+        setUpDropdown(R.id.lists, LISTS);
+        setUpDropdownCheckbox(R.id.labels, LABELS, getStringFromStrings(R.string.chosen_labels));
+//        setUpDropdown(R.id.hour, HOUR_ARR_STR);
+//        setUpDropdown(R.id.min, MIN_ARR_STR);
+    }
 
-        // assign variable
-        textView = findViewById(R.id.textView);
+    private void setUpDropdown(int id, String[] list) {
+        Spinner mySpinner = findViewById(id);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, list);
+        mySpinner.setAdapter(adapter);
+    }
 
-        // initialize selected language array
-        selectedLanguage = new boolean[langArray.length];
+    private void setUpDropdownCheckbox(int id, String[] arr, String title) {
+        TextView textView = findViewById(id);
+
+        boolean[] selecteditems = new boolean[arr.length];
+        ArrayList<Integer> itemList = new ArrayList<>();
 
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 // Initialize alert dialog
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 
-                // set title
-                builder.setTitle("Select Language");
+                // Set title
+                builder.setTitle(title);
 
                 // set dialog non cancelable
                 builder.setCancelable(false);
 
-                builder.setMultiChoiceItems(langArray, selectedLanguage, new DialogInterface.OnMultiChoiceClickListener() {
+                builder.setMultiChoiceItems(arr, selecteditems, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i, boolean b) {
                         // check condition
                         if (b) {
                             // when checkbox selected
-                            // Add position  in lang list
-                            langList.add(i);
+                            // Add position in itemList
+                            itemList.add(i);
                             // Sort array list
-                            Collections.sort(langList);
+                            Collections.sort(itemList);
                         } else {
                             // when checkbox unselected
-                            // Remove position from langList
-                            langList.remove(Integer.valueOf(i));
+                            // Remove position from itemList
+                            itemList.remove(Integer.valueOf(i));
                         }
                     }
                 });
@@ -107,13 +117,13 @@ public class MainActivity extends AppCompatActivity {
                         // Initialize string builder
                         StringBuilder stringBuilder = new StringBuilder();
                         // use for loop
-                        for (int j = 0; j < langList.size(); j++) {
+                        for (int j = 0; j < itemList.size(); j++) {
                             // concat array value
-                            stringBuilder.append(langArray[langList.get(j)]);
+                            stringBuilder.append(arr[itemList.get(j)]);
                             // check condition
-                            if (j != langList.size() - 1) {
-                                // When j value  not equal
-                                // to lang list size - 1
+                            if (j != itemList.size() - 1) {
+                                // When j value not equal
+                                // to itemList size - 1
                                 // add comma
                                 stringBuilder.append(", ");
                             }
@@ -134,11 +144,11 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         // use for loop
-                        for (int j = 0; j < selectedLanguage.length; j++) {
+                        for (int j = 0; j < selecteditems.length; j++) {
                             // remove all selection
-                            selectedLanguage[j] = false;
+                            selecteditems[j] = false;
                             // clear language list
-                            langList.clear();
+                            itemList.clear();
                             // clear text view value
                             textView.setText("");
                         }
@@ -148,39 +158,45 @@ public class MainActivity extends AppCompatActivity {
                 builder.show();
             }
         });
-
-        /// ///////
-
-        giveCreateCardButtonFunctionality();
-//        changeTextOnce();
-        setUpDropdown(R.id.lists, LISTS);
-        setUpDropdown(R.id.labels, LABELS);
-        setUpDropdown(R.id.hour, HOUR_ARR_STR);
-        setUpDropdown(R.id.min, MIN_ARR_STR);
     }
 
+    private String getStringFromStrings(int id) {
+        return getResources().getString(id);
+    }
+
+    private void postAlertToButton(Button button, String message, int delayMillis) {
+        button.setText(message);
+        Runnable runnable = () -> button.setText(getStringFromStrings(R.string.create_card_button));
+        CreateCardRunnableHandler.removeCallbacksAndMessages(null);
+        CreateCardRunnableHandler.postDelayed(runnable, delayMillis);
+    }
     private void giveCreateCardButtonFunctionality() {
-//        final String[] manyDifferentStrings = LISTS;
-
-//        final TextView changingText = (TextView) findViewById(R.id.chosen_list_button);
         Button createCardButton = (Button) findViewById(R.id.chosen_list_button);
-
         createCardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name = getTextFromBox(R.id.name);
-                String desc = getTextFromBox(R.id.description);
+                String name = getTextFromTextView(R.id.name);
+                String desc = getTextFromTextView(R.id.description);
                 String list = getTextFromSpinner(R.id.lists);
-                String labels = getTextFromSpinner(R.id.labels);
-                if (!name.isEmpty() && !list.isEmpty()) {
-                    cardCreator.createTrelloCard(name, list, desc, new String[]{labels});
+                String[] labels = getTextFromTextView(R.id.labels).split(", ");
+
+                String errmsg = null;
+                try {
+                    if (name.isEmpty()) {
+                        errmsg = "Please enter a card name.";
+                    } else {
+                        createCardButton.setText("Creating Card...");
+                        cardCreator.createTrelloCard(name, list, desc, labels);
+                        postAlertToButton(createCardButton, "Card Created!", 3000);
+                    }
+                } catch (Exception e) {
+                    errmsg = e.toString();
                 }
-//                int random = (int) (Math.random() * manyDifferentStrings.length);
-//                if (random == oldValue) {
-//                    random = (int) (Math.random() * manyDifferentStrings.length);
-//                }
-//                changingText.setText(manyDifferentStrings[random]);
-//                oldValue = random;
+                if (errmsg != null) {
+                    Log.w("HELLO_WORLD", "Couldn't create card.");
+                    Log.w("HELLO_WORLD", errmsg);
+                    postAlertToButton(createCardButton, errmsg, 1500);
+                }
             }
         });
     }
@@ -197,20 +213,13 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private String getTextFromBox(int id) {
-        EditText text = (EditText)findViewById(id);
+    private String getTextFromTextView(int id) {
+        TextView text = (TextView)findViewById(id);
         return text.getText().toString();
     }
 
     private String getTextFromSpinner(int id) {
         Spinner spinner_house = (Spinner) findViewById(id);
         return spinner_house.getSelectedItem().toString();
-    }
-
-    private void setUpDropdown(int id, String[] list) {
-        Spinner mySpinner = findViewById(id);
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, list);
-        mySpinner.setAdapter(adapter);
     }
 }
