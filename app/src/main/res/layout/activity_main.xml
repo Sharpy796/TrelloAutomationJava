@@ -74,21 +74,9 @@
         android:layout_height="match_parent">
 
         <Button
-            android:id="@+id/create_card"
+            android:id="@+id/chosen_list_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Create Card" />
+            android:text="@string/create_card_button"/>
     </TableRow>
-
-    <Button
-        android:id="@+id/chosen_list_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/create_card_button"/>
-    <Button
-        android:id="@+id/something_else"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="owo what's this?"/>
-
 </TableLayout>
