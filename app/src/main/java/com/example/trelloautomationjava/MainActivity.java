@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -20,7 +21,9 @@ import androidx.core.view.WindowInsetsCompat;
 import android.content.DialogInterface;
 import android.widget.TimePicker;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import org.json.JSONException;
 
@@ -31,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     int oldValue;
+    boolean showTime = false;
     public final String LOG_TAG = "HELLO_WORLD";
     CreatingCards cardCreator = new CreatingCards();
     final String[] LISTS = {"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday","Later"};
@@ -61,7 +65,8 @@ public class MainActivity extends AppCompatActivity {
         setUpDropdown(R.id.lists, LISTS, getStringFromStrings(R.string.chosen_list));
         setUpDropdownCheckbox(R.id.labels, LABELS, getStringFromStrings(R.string.chosen_labels));
         setUpCheckBox();
-        setUpClock();
+//        setUpClock();
+        setUpDueDateButton();
         giveCreateCardButtonFunctionality();
     }
 
@@ -290,6 +295,87 @@ public class MainActivity extends AppCompatActivity {
                 textView.setVisibility(ViewGroup.VISIBLE);
             }
         });
+    }
+
+    private void setUpDueDateButton() {
+        Button dueDateButton = (Button) findViewById(R.id.duedate);
+        dueDateButton.setOnClickListener(new View.OnClickListener() {
+            TimePicker tp = new TimePicker(MainActivity.this);
+            DatePicker dp = new DatePicker(MainActivity.this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+
+            @Override
+            public void onClick(View v) {
+
+                builder.setMessage("Due Date:");
+                builder.setTitle("Choose Due Date");
+                ViewGroup parent = null;
+                if (showTime) {
+                    try {
+                        parent = (ViewGroup)tp.getParent();
+                        if (parent != null) {
+                            parent.removeView(tp);
+                        };
+                    } catch (Exception e) {
+                        Log.w(LOG_TAG, e.toString());
+                    }
+                } else {
+                    try {
+                        parent = (ViewGroup)dp.getParent();
+                        if (parent != null) {
+                            parent.removeView(dp);
+                        };
+                    } catch (Exception e) {
+                        Log.w(LOG_TAG, e.toString()+"asdfasdfasdf");
+                    }
+                }
+
+                builder.setView(dp);
+                builder.setCancelable(false);
+
+                builder.setPositiveButton("Confirm", (DialogInterface.OnClickListener) (dialog, which) -> {
+                    // set due date
+                });
+
+                builder.setNeutralButton("Swap", (DialogInterface.OnClickListener) (dialog, which) -> {
+                    ViewGroup par = null;
+                    try {
+                        showTime = !showTime;
+                        if (showTime) {
+                            par = (ViewGroup)dp.getParent();
+                            if (par != null) {par.removeView(dp);}
+                            builder.setView(tp);
+                        } else {
+                            par = (ViewGroup)tp.getParent();
+                            if (par != null) {par.removeView(tp);}
+                            builder.setView(dp);
+                        }
+                    } catch (Exception e) {
+//                        Log.w(LOG_TAG, e.toString());
+                    }
+                });
+
+                builder.setNegativeButton("Cancel", (DialogInterface.OnClickListener) (dialog, which) -> {
+//                    dialog.dismiss();
+                    try {
+                        dialog.cancel();
+                    } catch (Exception e) {
+                        Log.w(LOG_TAG, e.toString());
+                    }
+                });
+
+                // Create the Alert dialog
+                AlertDialog alertDialog = builder.create();
+
+                // Show the Alert Dialog box
+                try {
+                    alertDialog.show();
+                } catch (Exception e) {
+                    Log.w(LOG_TAG, e.toString());
+                }
+            }
+        });
+
     }
 
     private void giveCreateCardButtonFunctionality() {

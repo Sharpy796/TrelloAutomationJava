@@ -113,13 +113,16 @@
         android:hint="Select Lists" />
 
 
+<!--    <View-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_margin="16dp"/>-->
+
     <TimePicker
         android:id="@+id/timePicker"
         android:layout_alignParentStart="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:scaleX="0.65"
-        android:scaleY="0.65"
         android:layout_below="@+id/labelslabel"
         android:timePickerMode="spinner" />
 
