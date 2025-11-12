@@ -1,82 +1,175 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="top"
+    android:padding="32dp"
     tools:context=".MainActivity">
+    <!-- name row -->
+    <TextView
+        android:id="@+id/namelabel"
+        android:layout_alignParentStart="true"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:padding="16dp"
+        android:text="Name:" />
 
-    <TableRow>
-        <TextView android:text="Name:"/>
-        <EditText android:id="@+id/name"/>
-    </TableRow>
+    <EditText
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/description"
+        android:layout_alignTop="@+id/namelabel"
+        android:layout_alignBottom="@+id/namelabel"
+        android:elegantTextHeight="true"
+        android:background="@android:drawable/editbox_background"
+        android:textColor="@android:color/background_dark"
+        android:textColorHint="@color/cardview_shadow_start_color"
+        android:textSize="7pt"
+        android:padding="16dp"
+        android:hint="Your Task" />
 
-    <TableRow>
-        <TextView android:text="Description:"/>
-        <EditText android:id="@+id/description"/>
-    </TableRow>
+    <!-- desc row -->
+    <TextView
+        android:id="@+id/descriptionlabel"
+        android:layout_alignParentStart="true"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:padding="16dp"
+        android:layout_below="@+id/namelabel"
+        android:text="Description:" />
 
-    <TableRow>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="List:"/>
-        <Spinner
-            android:id="@+id/lists"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/cardview_dark_background"
-            android:spinnerMode="dropdown" />
-    </TableRow>
+    <EditText
+        android:id="@+id/description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/descriptionlabel"
+        android:layout_alignBottom="@+id/descriptionlabel"
+        android:layout_below="@+id/namelabel"
+        android:layout_toEndOf="@id/descriptionlabel"
+        android:elegantTextHeight="true"
+        android:background="@android:drawable/editbox_background"
+        android:textColor="@android:color/background_dark"
+        android:textColorHint="@color/cardview_shadow_start_color"
+        android:textSize="7pt"
+        android:padding="16dp"
+        android:hint="Task Description" />
 
-    <TableRow>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Labels:"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-        <TextView
-            android:id="@+id/labels"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:background="@android:drawable/editbox_background"
-            android:drawableRight="@android:drawable/arrow_down_float"
-            android:drawablePadding="16dp"
-            android:hint="Select Lists"
-            android:padding="12dp" />
-<!--        <Spinner-->
-<!--            android:id="@+id/labels"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:background="@color/cardview_dark_background"-->
-<!--            android:spinnerMode="dropdown"/>-->
-    </TableRow>
+    <!-- lists row -->
+    <TextView
+        android:id="@+id/listslabel"
+        android:layout_alignParentStart="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:layout_below="@+id/descriptionlabel"
+        android:layout_alignStart="@+id/description"
+        android:text="List:" />
 
-<!--    <TableRow>-->
-<!--        <Spinner-->
-<!--            android:id="@+id/hour"-->
-<!--            android:textColor="#FF0000"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:background="@color/cardview_dark_background"-->
-<!--            android:spinnerMode="dropdown" />-->
-<!--        <TextView-->
-<!--            android:text=":"/>-->
-<!--        <Spinner-->
-<!--            android:id="@+id/min"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:background="@color/cardview_dark_background"-->
-<!--            android:spinnerMode="dropdown" />-->
-<!--    </TableRow>-->
-    <Button
-        android:id="@+id/chosen_list_button"
+    <TextView
+        android:id="@+id/lists"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/description"
+        android:layout_alignTop="@+id/listslabel"
+        android:layout_alignBottom="@+id/listslabel"
+        android:padding="16dp"
+        android:elegantTextHeight="true"
+        android:background="@android:drawable/editbox_background"
+        android:textColor="@android:color/background_dark"
+        app:drawableRightCompat="@android:drawable/arrow_down_float"
+        android:textColorHint="@color/cardview_shadow_start_color"
+        android:hint="Select Labels"
+        android:text="Monday"/>
+
+    <!-- labels row -->
+    <TextView
+        android:id="@+id/labelslabel"
+        android:layout_alignParentStart="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:layout_alignStart="@+id/description"
+        android:layout_below="@+id/listslabel"
+        android:text="Labels:" />
+
+    <TextView
+        android:id="@+id/labels"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/description"
+        android:layout_alignTop="@+id/labelslabel"
+        android:layout_alignBottom="@+id/labelslabel"
+        android:padding="16dp"
+        android:elegantTextHeight="true"
+        android:background="@android:drawable/editbox_background"
+        android:textColor="@android:color/background_dark"
+        app:drawableRightCompat="@android:drawable/arrow_down_float"
+        android:textColorHint="@color/cardview_shadow_start_color"
+        android:hint="Select Lists" />
+
+
+    <TimePicker
+        android:id="@+id/timePicker"
+        android:layout_alignParentStart="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/create_card_button"/>
-</TableLayout>
+        android:scaleX="0.65"
+        android:scaleY="0.65"
+        android:layout_below="@+id/labelslabel"
+        android:timePickerMode="spinner" />
+
+<!--    <DatePicker-->
+<!--        android:id="@+id/datePicker"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:datePickerMode="spinner" />-->
+
+    <!-- due date row -->
+    <TextView
+        android:id="@+id/duedatelabel"
+        android:layout_alignParentStart="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:layout_alignStart="@+id/description"
+        android:layout_below="@+id/timePicker"
+        android:text="Due Date:" />
+
+    <Button
+        android:id="@+id/duedate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/duedateenabled"
+        android:layout_alignTop="@+id/duedatelabel"
+        android:layout_alignBottom="@+id/duedatelabel"
+        android:elegantTextHeight="true"
+        android:textColor="@android:color/background_dark"
+        android:text="No Due Date" />
+
+    <CheckBox
+        android:id="@+id/duedateenabled"
+        android:layout_width="50dp"
+        android:layout_height="16dp"
+        android:padding="16dp"
+        android:layout_alignStart="@+id/description"
+        android:layout_alignTop="@+id/duedatelabel"
+        android:layout_alignBottom="@+id/duedatelabel"
+        android:layout_below="@+id/timePicker"/>
+
+    <!-- create card row -->
+    <Button
+        android:id="@+id/chosen_list_button"
+        android:layout_alignParentStart="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/description"
+        android:layout_below="@+id/duedatelabel"
+        android:layout_marginHorizontal="40dp"
+        android:backgroundTint="@android:color/holo_blue_dark"
+        android:text="@string/create_card_button" />
+</RelativeLayout>

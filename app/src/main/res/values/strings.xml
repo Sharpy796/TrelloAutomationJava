@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Trello Card Creator</string>
     <string name="create_card_button">Create Card</string>
+    <string name="chosen_list">Select List</string>
     <string name="chosen_labels">Select Labels</string>
     <string name="hours">07</string>
     <string name="minutes">00</string>
