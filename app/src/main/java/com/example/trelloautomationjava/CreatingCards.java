@@ -25,6 +25,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 interface OnTitleReceivedListener {
     void onTitleReceived(String title);
@@ -173,8 +174,9 @@ public class CreatingCards {
                     .build();
             Call call = client.newCall(request);
             Response response = call.execute();
+            ResponseBody body = response.body();
             Log.i(LOG_TAG,"Card created!");
-            Log.i(LOG_TAG,response.body().string());
+            Log.i(LOG_TAG,body.string());
         } catch (IOException | JSONException | RuntimeException e) {
             Log.e(LOG_TAG, "Failed creating card");
             StringWriter sw = new StringWriter();

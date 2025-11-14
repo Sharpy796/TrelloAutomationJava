@@ -1,8 +1,8 @@
 package com.example.trelloautomationjava;
 
-import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,6 +16,7 @@ import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
@@ -23,20 +24,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import android.content.DialogInterface;
-import android.widget.TimePicker;
 
-import java.text.DateFormat;
-import java.time.*;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity {
-    boolean showTime = false;
     public final String LOG_TAG = "HELLO_WORLD";
     CreatingCards cardCreator = new CreatingCards();
     final String[] LISTS = {"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday","Later"};
@@ -73,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
         setUpDropdown(R.id.lists, LISTS, getStringFromStrings(R.string.chosen_list));
         setUpDropdownCheckbox(R.id.labels, LABELS, getStringFromStrings(R.string.chosen_labels));
         setUpCheckBox();
-//        setUpClock();
         setUpDueDateButton();
         giveCreateCardButtonFunctionality();
 
@@ -100,14 +95,14 @@ public class MainActivity extends AppCompatActivity {
         DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                openTimePicker(year, month, dayOfMonth);
+                openTimePicker(year, month+1, dayOfMonth);
             }
         };
         DatePickerDialog datePickerDialog = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             datePickerDialog = new DatePickerDialog(this,
     //                android.R.style.Theme,
-                    dateSetListener, today.getYear(), today.getMonthValue()-1, today.getDayOfMonth());
+                    dateSetListener, dueDate[0], dueDate[1]-1, dueDate[2]);
         } else {
             Log.w(LOG_TAG, "Why do i have to do this fricken thing aaaaaaaaa.");
         }
@@ -144,7 +139,13 @@ public class MainActivity extends AppCompatActivity {
     private String parseDueDate() {
         // 2025-11-14T19:00:00-06:00
         String message = "";
-        message += dueDate[0]+"-"+dueDate[1]+"-"+dueDate[2]+"T";
+        message += dueDate[0]+"-";
+        if (dueDate[1] < 10) {
+            message += "0";
+        } message += dueDate[1]+"-";
+        if (dueDate[2] < 10) {
+            message += "0";
+        } message += dueDate[2]+"T";
         if (dueDate[3] < 10) {
             message += "0";
         } message += dueDate[3]+":";
