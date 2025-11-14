@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
         };
         TimePickerDialog timePickerDialog = new TimePickerDialog(this,
                 android.R.style.Theme_Holo_Light_Dialog_NoActionBar,
-                timeSetListener, 19, 00, false);
+                timeSetListener, dueDate[3], dueDate[4], false);
 
         timePickerDialog.show();
     }
@@ -161,10 +161,14 @@ public class MainActivity extends AppCompatActivity {
         String message = monthOfYear+"/"+dayOfMonth+"/"+year+" @";
 
         String AMPM = "AM";
-        if (hourOfDay > 12) {
+        if (hourOfDay > 11) {
             hourOfDay -= 12;
             AMPM = "PM";
         }
+        if (hourOfDay == 0) {
+            hourOfDay = 12;
+        }
+
 
         if (hourOfDay < 10) {
             message += "0";
