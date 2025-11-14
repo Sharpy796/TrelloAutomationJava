@@ -1,5 +1,10 @@
 package com.example.trelloautomationjava;
 
+import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
+import android.content.res.ColorStateList;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -22,6 +27,7 @@ import android.content.DialogInterface;
 import android.widget.TimePicker;
 
 import java.text.DateFormat;
+import java.time.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -30,10 +36,6 @@ import org.json.JSONException;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
-
-
-
-    int oldValue;
     boolean showTime = false;
     public final String LOG_TAG = "HELLO_WORLD";
     CreatingCards cardCreator = new CreatingCards();
@@ -47,12 +49,18 @@ public class MainActivity extends AppCompatActivity {
     public final int[] HOUR_ARR_INT = {1,2,3,4,5,6,7,8,9,10,11,12};
     public final int[] MIN_ARR_INT = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59};
     final Handler CreateCardRunnableHandler = new Handler();
+    final LocalDateTime todayDate = getToday();
+    int[] dueDate = new int[5];
+    ColorStateList originalButtonColor;
 
     public MainActivity() throws JSONException, IOException {
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            updateDueDateValue(todayDate.getYear(), todayDate.getMonthValue(), todayDate.getDayOfMonth(), 19, 0);
+        }
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
@@ -68,6 +76,104 @@ public class MainActivity extends AppCompatActivity {
 //        setUpClock();
         setUpDueDateButton();
         giveCreateCardButtonFunctionality();
+
+        try {
+            originalButtonColor = ((Button)findViewById(R.id.duedate)).getTextColors();
+        } catch (Exception e) {
+            Log.w(LOG_TAG, e.toString());
+        }
+
+    }
+
+    private LocalDateTime getToday() {
+        LocalDateTime today = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            today = LocalDateTime.now();
+        } else {
+            Log.w(LOG_TAG, "Picking today didn't work.");
+        }
+        return today;
+    }
+
+    private void openDatePicker() {
+        LocalDateTime today = getToday();
+        DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                openTimePicker(year, month, dayOfMonth);
+            }
+        };
+        DatePickerDialog datePickerDialog = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            datePickerDialog = new DatePickerDialog(this,
+    //                android.R.style.Theme,
+                    dateSetListener, today.getYear(), today.getMonthValue()-1, today.getDayOfMonth());
+        } else {
+            Log.w(LOG_TAG, "Why do i have to do this fricken thing aaaaaaaaa.");
+        }
+
+        datePickerDialog.show();
+    }
+    private void openTimePicker(int year, int monthOfYear, int dayOfMonth) {
+        TimePickerDialog.OnTimeSetListener timeSetListener = new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                updateDueDateText(year, monthOfYear, dayOfMonth, hourOfDay, minute);
+                updateDueDateValue(year, monthOfYear, dayOfMonth, hourOfDay, minute);
+            }
+        };
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this,
+                android.R.style.Theme_Holo_Light_Dialog_NoActionBar,
+                timeSetListener, 19, 00, false);
+
+        timePickerDialog.show();
+    }
+
+    private void updateDueDateText() {
+        updateDueDateText(dueDate[0],dueDate[1],dueDate[2],dueDate[3],dueDate[4]);
+    }
+
+    private void updateDueDateValue(int year, int monthOfYear, int dayOfMonth, int hourOfDay, int minute) {
+        dueDate[0] = year;
+        dueDate[1] = monthOfYear;
+        dueDate[2] = dayOfMonth;
+        dueDate[3] = hourOfDay;
+        dueDate[4] = minute;
+    }
+
+    private String parseDueDate() {
+        // 2025-11-14T19:00:00-06:00
+        String message = "";
+        message += dueDate[0]+"-"+dueDate[1]+"-"+dueDate[2]+"T";
+        if (dueDate[3] < 10) {
+            message += "0";
+        } message += dueDate[3]+":";
+        if (dueDate[4] < 10) {
+            message += "0";
+        } message += dueDate[4]+":00-06:00";
+        Log.i(LOG_TAG, "Date:\t"+message);
+        return message;
+    }
+
+    private void updateDueDateText(int year, int monthOfYear, int dayOfMonth, int hourOfDay, int minute) {
+        Button dueDateButton = (Button) findViewById(R.id.duedate);
+        String message = monthOfYear+"/"+dayOfMonth+"/"+year+" @";
+
+        String AMPM = "AM";
+        if (hourOfDay > 12) {
+            hourOfDay -= 12;
+            AMPM = "PM";
+        }
+
+        if (hourOfDay < 10) {
+            message += "0";
+        } message += hourOfDay+":";
+
+        if (minute < 10) {
+            message += "0";
+        } message += minute+" ";
+        message += AMPM;
+        dueDateButton.setText(message);
     }
 
     private String getStringFromStrings(int id) {
@@ -87,9 +193,6 @@ public class MainActivity extends AppCompatActivity {
     private void setUpDropdown(int id, String[] arr, String title) {
         TextView textView = findViewById(id);
 
-        boolean[] selecteditems = new boolean[arr.length];
-        ArrayList<Integer> itemList = new ArrayList<>();
-
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -107,23 +210,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-                builder.setMultiChoiceItems(arr, selecteditems, new DialogInterface.OnMultiChoiceClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i, boolean b) {
-                        // check condition
-                        if (b) {
-                            // when checkbox selected
-                            // Add position in itemList
-                            itemList.add(i);
-                            // Sort array list
-                            Collections.sort(itemList);
-                        } else {
-                            // when checkbox unselected
-                            // Remove position from itemList
-                            itemList.remove(Integer.valueOf(i));
-                        }
-                    }
-                });
                 // show dialog
                 builder.show();
             }
@@ -215,15 +301,25 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void postAlertToButton(Button button, String message, int delayMillis) {
+    private void postAlertToButton(Button button, String message, int delayMillis, int code) {
         button.setText(message);
-        Runnable runnable = () -> button.setText(getStringFromStrings(R.string.create_card_button));
+        if (code == 1) {
+            button.setBackgroundColor(getResources().getColor(R.color.button_success));
+            button.setTextColor(getResources().getColor(R.color.text_success));
+        } if (code == 2) {
+            button.setBackgroundColor(getResources().getColor(R.color.button_danger));
+            button.setTextColor(getResources().getColor(R.color.text_danger));
+        }
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                button.setText(getStringFromStrings(R.string.create_card_button));
+                button.setBackgroundColor(getResources().getColor(R.color.button_primary));
+                button.setTextColor(getResources().getColor(R.color.text_on_primary));
+            }
+        };
         CreateCardRunnableHandler.removeCallbacksAndMessages(null);
         CreateCardRunnableHandler.postDelayed(runnable, delayMillis);
-    }
-
-    private void handleDueDateText(CheckBox checkBox) {
-        handleDueDateText(checkBox);
     }
 
     private void setUpCheckBox() {
@@ -247,7 +343,7 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     dueDateButton.setEnabled(true);
-                    dueDateButton.setText(parseDueDateVisual());
+                    updateDueDateText();
                 } else {
                     dueDateButton.setEnabled(false);
                     dueDateButton.setText("No Due Date");
@@ -260,122 +356,32 @@ public class MainActivity extends AppCompatActivity {
         return "WIP DUE DATE";
     }
 
-    private void setUpClock() {
-        // Initialize TextView and TimePicker from layout
-        TextView textView = findViewById(R.id.duedate);
-        TimePicker timePicker = findViewById(R.id.timePicker);
-
-        // Set a listener for when the time changes
-        timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
-            @Override
-            public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
-                int hour = hourOfDay;
-                String amPm;
-
-                // Determine AM or PM and adjust hour
-                if (hour == 0) {
-                    hour += 12;
-                    amPm = "AM";
-                } else if (hour == 12) {
-                    amPm = "PM";
-                } else if (hour > 12) {
-                    hour -= 12;
-                    amPm = "PM";
-                } else {
-                    amPm = "AM";
-                }
-
-                // Format hour and minute for display
-                String formattedHour = (hour < 10) ? "0" + hour : String.valueOf(hour);
-                String formattedMinute = (minute < 10) ? "0" + minute : String.valueOf(minute);
-
-                // Display the selected time
-                String msg = "Time is: " + formattedHour + " : " + formattedMinute + " " + amPm;
-                textView.setText(msg);
-                textView.setVisibility(ViewGroup.VISIBLE);
+    private void removeParent(boolean showTime, AlertDialog.Builder builder, TimePicker tp, DatePicker dp) {
+        ViewGroup par = null;
+        try {
+            showTime = !showTime;
+            if (showTime) {
+                par = (ViewGroup)dp.getParent();
+                if (par != null) {par.removeView(dp);}
+            } else {
+                par = (ViewGroup)tp.getParent();
+                if (par != null) {par.removeView(tp);}
             }
-        });
+        } catch (Exception e) {
+            Log.w(LOG_TAG, "Error removing parent");
+            Log.w(LOG_TAG, e.toString());
+        }
     }
 
     private void setUpDueDateButton() {
         Button dueDateButton = (Button) findViewById(R.id.duedate);
+        updateDueDateText();
         dueDateButton.setOnClickListener(new View.OnClickListener() {
-            TimePicker tp = new TimePicker(MainActivity.this);
-            DatePicker dp = new DatePicker(MainActivity.this);
-            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-
             @Override
             public void onClick(View v) {
-
-                builder.setMessage("Due Date:");
-                builder.setTitle("Choose Due Date");
-                ViewGroup parent = null;
-                if (showTime) {
-                    try {
-                        parent = (ViewGroup)tp.getParent();
-                        if (parent != null) {
-                            parent.removeView(tp);
-                        };
-                    } catch (Exception e) {
-                        Log.w(LOG_TAG, e.toString());
-                    }
-                } else {
-                    try {
-                        parent = (ViewGroup)dp.getParent();
-                        if (parent != null) {
-                            parent.removeView(dp);
-                        };
-                    } catch (Exception e) {
-                        Log.w(LOG_TAG, e.toString()+"asdfasdfasdf");
-                    }
-                }
-
-                builder.setView(dp);
-                builder.setCancelable(false);
-
-                builder.setPositiveButton("Confirm", (DialogInterface.OnClickListener) (dialog, which) -> {
-                    // set due date
-                });
-
-                builder.setNeutralButton("Swap", (DialogInterface.OnClickListener) (dialog, which) -> {
-                    ViewGroup par = null;
-                    try {
-                        showTime = !showTime;
-                        if (showTime) {
-                            par = (ViewGroup)dp.getParent();
-                            if (par != null) {par.removeView(dp);}
-                            builder.setView(tp);
-                        } else {
-                            par = (ViewGroup)tp.getParent();
-                            if (par != null) {par.removeView(tp);}
-                            builder.setView(dp);
-                        }
-                    } catch (Exception e) {
-//                        Log.w(LOG_TAG, e.toString());
-                    }
-                });
-
-                builder.setNegativeButton("Cancel", (DialogInterface.OnClickListener) (dialog, which) -> {
-//                    dialog.dismiss();
-                    try {
-                        dialog.cancel();
-                    } catch (Exception e) {
-                        Log.w(LOG_TAG, e.toString());
-                    }
-                });
-
-                // Create the Alert dialog
-                AlertDialog alertDialog = builder.create();
-
-                // Show the Alert Dialog box
-                try {
-                    alertDialog.show();
-                } catch (Exception e) {
-                    Log.w(LOG_TAG, e.toString());
-                }
+                openDatePicker();
             }
         });
-
     }
 
     private void giveCreateCardButtonFunctionality() {
@@ -387,6 +393,11 @@ public class MainActivity extends AppCompatActivity {
                 String desc = getTextFromTextView(R.id.description);
                 String list = getTextFromTextView(R.id.lists);
                 String[] labels = getTextFromTextView(R.id.labels).split(", ");
+                String date = "";
+                boolean dueDateEnabled = ((CheckBox)findViewById(R.id.duedateenabled)).isChecked();
+                if (dueDateEnabled) {
+                    date = parseDueDate();
+                }
 
                 String errmsg = null;
                 try {
@@ -394,8 +405,8 @@ public class MainActivity extends AppCompatActivity {
                         errmsg = "Please enter a card name.";
                     } else {
                         createCardButton.setText("Creating Card...");
-                        cardCreator.createTrelloCard(name, list, desc, labels);
-                        postAlertToButton(createCardButton, "Card Created!", 3000);
+                        cardCreator.createTrelloCard(name, list, desc, labels, date);
+                        postAlertToButton(createCardButton, "Card Created!", 3000, 1);
                     }
                 } catch (Exception e) {
                     errmsg = e.toString();
@@ -403,7 +414,7 @@ public class MainActivity extends AppCompatActivity {
                 if (errmsg != null) {
                     Log.w(LOG_TAG, "Couldn't create card.");
                     Log.w(LOG_TAG, errmsg);
-                    postAlertToButton(createCardButton, errmsg, 1500);
+                    postAlertToButton(createCardButton, errmsg, 1500, 2);
                 }
             }
         });

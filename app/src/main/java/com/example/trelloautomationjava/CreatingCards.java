@@ -164,7 +164,7 @@ public class CreatingCards {
                     .add("name", name)
                     .add("desc", desc)
                     .add("idLabels", stackToString(getArrayFromJson(getLabels(), "name", labels, "id")))
-//                    .add("due", dueDate)
+                    .add("due", dueDate)
                     // TODO: Add checklist functionality
                     .build();
             Request request = new Request.Builder()

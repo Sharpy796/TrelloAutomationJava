@@ -9,6 +9,17 @@
     android:gravity="top"
     android:padding="32dp"
     tools:context=".MainActivity">
+    <!-- title row -->
+    <TextView
+        android:id="@+id/title"
+        android:textAlignment="center"
+        android:fontFamily="sans-serif-medium"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:textSize="24dp"
+        android:layout_margin="16dp"
+        android:text="Trello Card Creator" />
+
     <!-- name row -->
     <TextView
         android:id="@+id/namelabel"
@@ -16,6 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:padding="16dp"
+        android:layout_below="@+id/title"
         android:text="Name:" />
 
     <EditText
@@ -31,6 +43,7 @@
         android:textColorHint="@color/cardview_shadow_start_color"
         android:textSize="7pt"
         android:padding="16dp"
+        android:layout_below="@+id/title"
         android:hint="Your Task" />
 
     <!-- desc row -->
@@ -46,9 +59,8 @@
     <EditText
         android:id="@+id/description"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="80dp"
         android:layout_alignTop="@+id/descriptionlabel"
-        android:layout_alignBottom="@+id/descriptionlabel"
         android:layout_below="@+id/namelabel"
         android:layout_toEndOf="@id/descriptionlabel"
         android:elegantTextHeight="true"
@@ -57,6 +69,7 @@
         android:textColorHint="@color/cardview_shadow_start_color"
         android:textSize="7pt"
         android:padding="16dp"
+        android:gravity="top"
         android:hint="Task Description" />
 
     <!-- lists row -->
@@ -66,7 +79,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
-        android:layout_below="@+id/descriptionlabel"
+        android:layout_below="@+id/description"
         android:layout_alignStart="@+id/description"
         android:text="List:" />
 
@@ -112,26 +125,6 @@
         android:textColorHint="@color/cardview_shadow_start_color"
         android:hint="Select Lists" />
 
-
-<!--    <View-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_margin="16dp"/>-->
-
-    <TimePicker
-        android:id="@+id/timePicker"
-        android:layout_alignParentStart="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/labelslabel"
-        android:timePickerMode="spinner" />
-
-<!--    <DatePicker-->
-<!--        android:id="@+id/datePicker"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:datePickerMode="spinner" />-->
-
     <!-- due date row -->
     <TextView
         android:id="@+id/duedatelabel"
@@ -140,7 +133,7 @@
         android:layout_height="wrap_content"
         android:padding="16dp"
         android:layout_alignStart="@+id/description"
-        android:layout_below="@+id/timePicker"
+        android:layout_below="@+id/labelslabel"
         android:text="Due Date:" />
 
     <Button
@@ -156,13 +149,14 @@
 
     <CheckBox
         android:id="@+id/duedateenabled"
-        android:layout_width="50dp"
-        android:layout_height="16dp"
+        android:layout_width="40dp"
+        android:layout_height="50dp"
         android:padding="16dp"
         android:layout_alignStart="@+id/description"
         android:layout_alignTop="@+id/duedatelabel"
         android:layout_alignBottom="@+id/duedatelabel"
-        android:layout_below="@+id/timePicker"/>
+        android:layout_below="@+id/labelslabel"
+        android:checked="true" />
 
     <!-- create card row -->
     <Button
@@ -173,6 +167,6 @@
         android:layout_alignStart="@+id/description"
         android:layout_below="@+id/duedatelabel"
         android:layout_marginHorizontal="40dp"
-        android:backgroundTint="@android:color/holo_blue_dark"
+        android:backgroundTint="@color/button_primary"
         android:text="@string/create_card_button" />
 </RelativeLayout>
