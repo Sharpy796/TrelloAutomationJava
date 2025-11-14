@@ -117,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
                 updateDueDateValue(year, monthOfYear, dayOfMonth, hourOfDay, minute);
             }
         };
+        // TODO: Fix display of this so the ok button is in the same spot as the datepicker's
         TimePickerDialog timePickerDialog = new TimePickerDialog(this,
                 android.R.style.Theme_Holo_Light_Dialog_NoActionBar,
                 timeSetListener, dueDate[3], dueDate[4], false);
@@ -168,7 +169,6 @@ public class MainActivity extends AppCompatActivity {
         if (hourOfDay == 0) {
             hourOfDay = 12;
         }
-
 
         if (hourOfDay < 10) {
             message += "0";
