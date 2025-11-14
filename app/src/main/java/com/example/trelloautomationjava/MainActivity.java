@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -28,6 +29,7 @@ import androidx.core.view.WindowInsetsCompat;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.sql.Time;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -119,9 +121,8 @@ public class MainActivity extends AppCompatActivity {
         };
         // TODO: Fix display of this so the ok button is in the same spot as the datepicker's
         TimePickerDialog timePickerDialog = new TimePickerDialog(this,
-                android.R.style.Theme_Holo_Light_Dialog_NoActionBar,
+                android.R.style.Theme_Holo_Dialog_NoActionBar,
                 timeSetListener, dueDate[3], dueDate[4], false);
-
         timePickerDialog.show();
     }
 
