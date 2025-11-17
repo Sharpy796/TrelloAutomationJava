@@ -9,6 +9,8 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -16,6 +18,7 @@ import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
@@ -23,15 +26,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSnapHelper;
+import androidx.recyclerview.widget.PagerSnapHelper;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
+
+import com.google.android.material.navigation.NavigationBarView;
 
 import org.json.JSONException;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MyRecyclerViewAdapter.ItemClickListener {
     public final String LOG_TAG = "HELLO_WORLD";
     CreatingCards cardCreator = new CreatingCards();
     final String[] LISTS = {"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday","Later"};
@@ -47,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
     final LocalDateTime todayDate = getToday();
     int[] dueDate = new int[5];
     int checkedListItem = 0;
+
+    MyRecyclerViewAdapter adapter;
 
     public MainActivity() throws JSONException, IOException {
     }
@@ -65,11 +79,19 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        setUpDropdown(R.id.lists, LISTS, getStringFromStrings(R.string.chosen_list));
+
+//        setUpSpinner(R.id.lists, LISTS);
+//        setUpDropdown(R.id.lists, LISTS, getStringFromStrings(R.string.chosen_list));
+        setUpRecycler(R.id.lists, LISTS);
         setUpDropdownCheckbox(R.id.labels, LABELS, getStringFromStrings(R.string.chosen_labels));
         setUpCheckBox();
         setUpDueDateButton();
         giveCreateCardButtonFunctionality();
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        Toast.makeText(this, "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
     }
 
     private LocalDateTime getToday() {
@@ -181,9 +203,25 @@ public class MainActivity extends AppCompatActivity {
         return text.getText().toString();
     }
 
+    private String getTextFromRecycler(int id) {
+        RecyclerView rv = findViewById(R.id.lists);
+        View focusedView = (View) rv.getFocusedChild();
+        if (focusedView == null) {
+            Log.w(LOG_TAG, "Null focusedview");
+            return "";
+        }
+        return "focusedView.getText().toString()";
+    }
+
     private String getTextFromSpinner(int id) {
         Spinner spinner_house = (Spinner) findViewById(id);
         return spinner_house.getSelectedItem().toString();
+    }
+
+    private void setUpSpinner(int id, String[] list) {
+        Spinner mySpinner = findViewById(id);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, list);
+        mySpinner.setAdapter(adapter);
     }
 
     private void setUpDropdown(int id, String[] arr, String title) {
@@ -210,6 +248,21 @@ public class MainActivity extends AppCompatActivity {
                 builder.show();
             }
         });
+    }
+
+    private void setUpRecycler(int id, String[] list) {
+        // data to populate the RecyclerView with
+        ArrayList<String> recyclerItems = new ArrayList<>();
+        recyclerItems.addAll(Arrays.asList(list));
+
+        // set up the RecyclerView
+        RecyclerView recyclerView = findViewById(R.id.lists);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new MyRecyclerViewAdapter(this, recyclerItems);
+        adapter.setClickListener(this);
+        recyclerView.setAdapter(adapter);
+        SnapHelper helper = new PagerSnapHelper();
+        helper.attachToRecyclerView(recyclerView);
     }
 
     private void setUpDropdownCheckbox(int id, String[] arr, String title) {
@@ -387,7 +440,12 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String name = getTextFromTextView(R.id.name);
                 String desc = getTextFromTextView(R.id.description);
-                String list = getTextFromTextView(R.id.lists);
+                String list = "";
+                try {
+                    list = getTextFromRecycler(R.id.lists);
+                } catch (Exception e) {
+                    Log.w(LOG_TAG, e.toString());
+                }
                 String[] labels = getTextFromTextView(R.id.labels).split(", ");
                 String date = "";
                 boolean dueDateEnabled = ((CheckBox)findViewById(R.id.duedateenabled)).isChecked();
