@@ -203,6 +203,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         checkedListItem = which;
                         textView.setText(arr[which]);
+                        dialog.dismiss();
                     }
                 });
 
