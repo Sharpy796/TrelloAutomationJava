@@ -3,7 +3,6 @@ package com.example.trelloautomationjava;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
-import android.content.res.ColorStateList;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,7 +13,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -29,7 +27,6 @@ import androidx.core.view.WindowInsetsCompat;
 import org.json.JSONException;
 
 import java.io.IOException;
-import java.sql.Time;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     final Handler CreateCardRunnableHandler = new Handler();
     final LocalDateTime todayDate = getToday();
     int[] dueDate = new int[5];
-    ColorStateList originalButtonColor;
+    int checkedListItem = 0;
 
     public MainActivity() throws JSONException, IOException {
     }
@@ -73,13 +70,6 @@ public class MainActivity extends AppCompatActivity {
         setUpCheckBox();
         setUpDueDateButton();
         giveCreateCardButtonFunctionality();
-
-        try {
-            originalButtonColor = ((Button)findViewById(R.id.duedate)).getTextColors();
-        } catch (Exception e) {
-            Log.w(LOG_TAG, e.toString());
-        }
-
     }
 
     private LocalDateTime getToday() {
@@ -208,10 +198,10 @@ public class MainActivity extends AppCompatActivity {
                 // Set title
                 builder.setTitle(title);
 
-                builder.setSingleChoiceItems(arr, 0, new DialogInterface.OnClickListener() {
-
+                builder.setSingleChoiceItems(arr, checkedListItem, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        checkedListItem = which;
                         textView.setText(arr[which]);
                     }
                 });

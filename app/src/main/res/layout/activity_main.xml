@@ -96,7 +96,7 @@
         android:textColor="@android:color/background_dark"
         app:drawableRightCompat="@android:drawable/arrow_down_float"
         android:textColorHint="@color/cardview_shadow_start_color"
-        android:hint="Select Labels"
+        android:hint="Select List"
         android:text="Monday"/>
 
     <!-- labels row -->
@@ -123,7 +123,7 @@
         android:textColor="@android:color/background_dark"
         app:drawableRightCompat="@android:drawable/arrow_down_float"
         android:textColorHint="@color/cardview_shadow_start_color"
-        android:hint="Select Lists" />
+        android:hint="Select Labels" />
 
     <!-- due date row -->
     <TextView
