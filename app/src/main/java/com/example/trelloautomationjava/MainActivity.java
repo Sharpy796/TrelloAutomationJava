@@ -241,6 +241,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
                     public void onClick(DialogInterface dialog, int which) {
                         checkedListItem = which;
                         textView.setText(arr[which]);
+                        dialog.dismiss();
                     }
                 });
 
