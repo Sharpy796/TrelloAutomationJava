@@ -124,8 +124,9 @@
         android:layout_alignTop="@+id/listslabel"
         android:layout_alignBottom="@+id/listslabel"
         android:nestedScrollingEnabled="false"
-        android:background="@android:drawable/spinner_background"
+        android:background="@android:drawable/editbox_background"
         android:overScrollMode="never"/>
+    <!-- TODO: Add scrollbar-looking thing -->
 
     <!-- labels row -->
     <TextView
