@@ -3,10 +3,13 @@ package com.example.trelloautomationjava;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.AttributeSet;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -15,6 +18,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -37,6 +41,8 @@ import com.google.android.material.navigation.NavigationBarView;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,6 +65,8 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
     final LocalDateTime todayDate = getToday();
     int[] dueDate = new int[5];
     int checkedListItem = 0;
+
+    private LayoutInflater mInflater;
 
     MyRecyclerViewAdapter adapter;
 
@@ -102,6 +110,47 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
             Log.w(LOG_TAG, "Picking today didn't work.");
         }
         return today;
+    }
+
+    private void openDueDatePicker() {
+        LocalDateTime today = getToday();
+        LayoutInflater inflater = LayoutInflater.from(this); // or getLayoutInflater() in an Activity
+        View linlayout = inflater.inflate(R.layout.datepicker_view, null); // The second argument is the parent ViewGroup, null for now.
+        DatePicker dp = (DatePicker) linlayout.findViewById(R.id.datepicker);
+        TimePicker tp = (TimePicker) linlayout.findViewById(R.id.timepicker);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Pick Due Date");
+        builder.setView(linlayout);
+        builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                int year = dp.getYear();
+                int monthOfYear = dp.getMonth()+1;
+                int dayOfMonth = dp.getDayOfMonth();
+                int hourOfDay = tp.getHour();
+                int minute = tp.getMinute();
+                updateDueDateText(year, monthOfYear, dayOfMonth, hourOfDay, minute);
+                updateDueDateValue(year, monthOfYear, dayOfMonth, hourOfDay, minute);
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        builder.setNeutralButton("Today", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        builder.show();
+
     }
 
     private void openDatePicker() {
@@ -204,7 +253,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
     }
 
     private String getTextFromRecycler(int id) {
-        RecyclerView rv = findViewById(R.id.lists);
+        RecyclerView rv = findViewById(id);
         View focusedView = (View) rv.getFocusedChild();
         if (focusedView == null) {
             Log.w(LOG_TAG, "Null focusedview");
@@ -429,7 +478,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         dueDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openDatePicker();
+                openDueDatePicker();
             }
         });
     }
@@ -439,14 +488,10 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         createCardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int delayMills = 3000;
                 String name = getTextFromTextView(R.id.name);
                 String desc = getTextFromTextView(R.id.description);
-                String list = "";
-                try {
-                    list = getTextFromRecycler(R.id.lists);
-                } catch (Exception e) {
-                    Log.w(LOG_TAG, e.toString());
-                }
+                String list = getTextFromRecycler(R.id.lists);
                 String[] labels = getTextFromTextView(R.id.labels).split(", ");
                 String date = "";
                 boolean dueDateEnabled = ((CheckBox)findViewById(R.id.duedateenabled)).isChecked();
@@ -458,18 +503,27 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
                 try {
                     if (name.isEmpty()) {
                         errmsg = "Please enter a card name.";
+                        delayMills = 1500;
                     } else {
                         createCardButton.setText("Creating Card...");
                         cardCreator.createTrelloCard(name, list, desc, labels, date);
-                        postAlertToButton(createCardButton, "Card Created!", 3000, 1);
+                        postAlertToButton(createCardButton, "Card Created!", delayMills, 1);
                     }
                 } catch (Exception e) {
+                    Log.e(LOG_TAG, "Failed creating card");
+                    StringWriter sw = new StringWriter();
+                    PrintWriter pw = new PrintWriter(sw);
+                    e.printStackTrace(pw);
+                    String sStackTrace = sw.toString(); // stack trace as a string
+                    Log.e(LOG_TAG, sStackTrace);
                     errmsg = e.toString();
+                    Log.e(LOG_TAG, errmsg);
+                    delayMills = 3000;
                 }
                 if (errmsg != null) {
                     Log.w(LOG_TAG, "Couldn't create card.");
                     Log.w(LOG_TAG, errmsg);
-                    postAlertToButton(createCardButton, errmsg, 1500, 2);
+                    postAlertToButton(createCardButton, errmsg, delayMills, 2);
                 }
             }
         });

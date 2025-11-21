@@ -153,8 +153,8 @@ public class CreatingCards {
         return val;
     }
 
-    public void createTrelloCard(String name, String list, String desc, String[] labels, String dueDate) {
-        try {
+    public void createTrelloCard(String name, String list, String desc, String[] labels, String dueDate) throws JSONException, IOException {
+//        try {
             fixStrictMode();
             String create_card_endpoint = TRELLO_ENDPOINT+"cards";
             Map<String, String> jsonMap = new HashMap<>();
@@ -177,24 +177,24 @@ public class CreatingCards {
             ResponseBody body = response.body();
             Log.i(LOG_TAG,"Card created!");
             Log.i(LOG_TAG,body.string());
-        } catch (IOException | JSONException | RuntimeException e) {
-            Log.e(LOG_TAG, "Failed creating card");
-            StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw);
-            e.printStackTrace(pw);
-            String sStackTrace = sw.toString(); // stack trace as a string
-            Log.e(LOG_TAG, sStackTrace);
-            Log.e(LOG_TAG, e.toString());
-        }
+//        } catch (IOException | JSONException | RuntimeException e) {
+//            Log.e(LOG_TAG, "Failed creating card");
+//            StringWriter sw = new StringWriter();
+//            PrintWriter pw = new PrintWriter(sw);
+//            e.printStackTrace(pw);
+//            String sStackTrace = sw.toString(); // stack trace as a string
+//            Log.e(LOG_TAG, sStackTrace);
+//            Log.e(LOG_TAG, e.toString());
+//        }
     }
 
-    public void createTrelloCard(String name, String list, String desc, String[] labels) {
+    public void createTrelloCard(String name, String list, String desc, String[] labels) throws JSONException, IOException {
         createTrelloCard(name, list, desc, labels, null);
     }
-    public void createTrelloCard(String name, String list, String desc) {
+    public void createTrelloCard(String name, String list, String desc) throws JSONException, IOException {
         createTrelloCard(name, list, desc, new String[0], null);
     }
-    public void createTrelloCard(String name, String list) {
+    public void createTrelloCard(String name, String list) throws JSONException, IOException {
         createTrelloCard(name, list, "", new String[0], null);
     }
 }
