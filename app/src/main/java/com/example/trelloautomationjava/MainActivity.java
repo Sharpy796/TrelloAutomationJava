@@ -254,12 +254,12 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
 
     private String getTextFromRecycler(int id) {
         RecyclerView rv = findViewById(id);
-        View focusedView = (View) rv.getFocusedChild();
+        TextView focusedView = (TextView) rv.getFocusedChild();
         if (focusedView == null) {
             Log.w(LOG_TAG, "Null focusedview");
             return "";
         }
-        return "focusedView.getText().toString()";
+        return focusedView.getText().toString();
     }
 
     private String getTextFromSpinner(int id) {
