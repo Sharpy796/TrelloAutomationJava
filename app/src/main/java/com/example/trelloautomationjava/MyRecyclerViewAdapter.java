@@ -1,6 +1,7 @@
 package com.example.trelloautomationjava;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,8 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     private List<String> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
+    private String currentItem;
+    private final String LOG_TAG = "HELLO_WORLD";
 
     // data is passed into the constructor
     MyRecyclerViewAdapter(Context context, List<String> data) {
@@ -34,6 +37,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     public void onBindViewHolder(ViewHolder holder, int position) {
         String item = mData.get(position);
         holder.myTextView.setText(item);
+//        Log.i(LOG_TAG,"onBindViewHolder() called:\t"+currentItem);
     }
 
     // total number of rows
@@ -55,9 +59,16 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
         @Override
         public void onClick(View view) {
-            if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
+            if (mClickListener != null) {
+                Log.i(LOG_TAG, "test complete! :D");
+                mClickListener.onItemClick(view, getAdapterPosition());
+            }
         }
+
+        public String getText() {return (String) myTextView.getText();}
     }
+
+    String getFocusedItem() {return currentItem;}
 
     // convenience method for getting data at click position
     String getItem(int id) {

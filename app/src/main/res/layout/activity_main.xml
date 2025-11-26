@@ -8,6 +8,7 @@
     android:orientation="vertical"
     android:padding="32dp"
     android:fitsSystemWindows="true">
+
     <RelativeLayout
         android:id="@+id/main"
         android:layout_width="match_parent"
@@ -18,131 +19,152 @@
         <!-- title row -->
         <TextView
             android:id="@+id/title"
-            android:textAlignment="center"
-            android:fontFamily="sans-serif-medium"
-            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:textSize="24dp"
+            android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:text="Trello Card Creator" />
+            android:fontFamily="sans-serif-medium"
+            android:text="Trello Card Creator"
+            android:textAlignment="center"
+            android:textSize="24dp" />
 
         <!-- name row -->
         <TextView
             android:id="@+id/namelabel"
-            android:layout_alignParentStart="true"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:padding="16dp"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/title"
+            android:layout_alignParentStart="true"
+            android:padding="16dp"
             android:text="Name:" />
 
         <EditText
             android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/title"
             android:layout_alignStart="@+id/description"
             android:layout_alignTop="@+id/namelabel"
             android:layout_alignBottom="@+id/namelabel"
-            android:elegantTextHeight="true"
             android:background="@android:drawable/editbox_background"
+            android:elegantTextHeight="true"
+            android:hint="Your Task"
+            android:padding="16dp"
             android:textColor="@android:color/background_dark"
             android:textColorHint="@color/cardview_shadow_start_color"
-            android:textSize="7pt"
-            android:padding="16dp"
-            android:layout_below="@+id/title"
-            android:hint="Your Task" />
+            android:textSize="7pt" />
 
         <!-- desc row -->
         <TextView
             android:id="@+id/descriptionlabel"
-            android:layout_alignParentStart="true"
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:padding="16dp"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/namelabel"
+            android:layout_alignParentStart="true"
+            android:padding="16dp"
             android:text="Description:" />
 
         <EditText
             android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="80dp"
-            android:layout_alignTop="@+id/descriptionlabel"
             android:layout_below="@+id/namelabel"
+            android:layout_alignTop="@+id/descriptionlabel"
             android:layout_toEndOf="@id/descriptionlabel"
-            android:elegantTextHeight="true"
             android:background="@android:drawable/editbox_background"
+            android:elegantTextHeight="true"
+            android:gravity="top"
+            android:hint="Task Description"
+            android:padding="16dp"
             android:textColor="@android:color/background_dark"
             android:textColorHint="@color/cardview_shadow_start_color"
-            android:textSize="7pt"
-            android:padding="16dp"
-            android:gravity="top"
-            android:hint="Task Description" />
+            android:textSize="7pt" />
 
         <!-- lists row -->
         <TextView
             android:id="@+id/listslabel"
-            android:layout_alignParentStart="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
             android:layout_below="@+id/description"
             android:layout_alignStart="@+id/description"
+            android:layout_alignParentStart="true"
+            android:padding="16dp"
             android:text="List:" />
 
-    <!--    <TextView-->
-    <!--        android:id="@+id/lists"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_alignStart="@+id/description"-->
-    <!--        android:layout_alignTop="@+id/listslabel"-->
-    <!--        android:layout_alignBottom="@+id/listslabel"-->
-    <!--        android:padding="16dp"-->
-    <!--        android:elegantTextHeight="true"-->
-    <!--        android:background="@android:drawable/editbox_background"-->
-    <!--        android:textColor="@android:color/background_dark"-->
-    <!--        app:drawableRightCompat="@android:drawable/arrow_down_float"-->
-    <!--        android:textColorHint="@color/cardview_shadow_start_color"-->
-    <!--        android:hint="Select List"-->
-    <!--        android:text="Monday"/>-->
+        <!--    <TextView-->
+        <!--        android:id="@+id/lists"-->
+        <!--        android:layout_width="match_parent"-->
+        <!--        android:layout_height="wrap_content"-->
+        <!--        android:layout_alignStart="@+id/description"-->
+        <!--        android:layout_alignTop="@+id/listslabel"-->
+        <!--        android:layout_alignBottom="@+id/listslabel"-->
+        <!--        android:padding="16dp"-->
+        <!--        android:elegantTextHeight="true"-->
+        <!--        android:background="@android:drawable/editbox_background"-->
+        <!--        android:textColor="@android:color/background_dark"-->
+        <!--        app:drawableRightCompat="@android:drawable/arrow_down_float"-->
+        <!--        android:textColorHint="@color/cardview_shadow_start_color"-->
+        <!--        android:hint="Select List"-->
+        <!--        android:text="Monday"/>-->
 
-    <!--    <Spinner-->
-    <!--        android:id="@+id/lists"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_alignStart="@+id/description"-->
-    <!--        android:layout_alignTop="@+id/listslabel"-->
-    <!--        android:layout_alignBottom="@+id/listslabel"-->
-    <!--        android:padding="16dp"-->
-    <!--        android:elegantTextHeight="true"-->
-    <!--        android:background="@android:drawable/editbox_background"-->
-    <!--        android:textColor="@android:color/background_dark"-->
-    <!--        app:drawableRightCompat="@android:drawable/arrow_down_float"-->
-    <!--        android:textColorHint="@color/cardview_shadow_start_color"-->
-    <!--        android:hint="Select List"-->
-    <!--        android:text="Monday"-->
-    <!--        android:spinnerMode="dialog" />-->
+        <!--    <Spinner-->
+        <!--        android:id="@+id/lists"-->
+        <!--        android:layout_width="match_parent"-->
+        <!--        android:layout_height="wrap_content"-->
+        <!--        android:layout_alignStart="@+id/description"-->
+        <!--        android:layout_alignTop="@+id/listslabel"-->
+        <!--        android:layout_alignBottom="@+id/listslabel"-->
+        <!--        android:padding="16dp"-->
+        <!--        android:elegantTextHeight="true"-->
+        <!--        android:background="@android:drawable/editbox_background"-->
+        <!--        android:textColor="@android:color/background_dark"-->
+        <!--        app:drawableRightCompat="@android:drawable/arrow_down_float"-->
+        <!--        android:textColorHint="@color/cardview_shadow_start_color"-->
+        <!--        android:hint="Select List"-->
+        <!--        android:text="Monday"-->
+        <!--        android:spinnerMode="dialog" />-->
 
-        <androidx.recyclerview.widget.RecyclerView
+        <!--        <androidx.recyclerview.widget.RecyclerView-->
+        <!--            android:id="@+id/lists"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_alignStart="@+id/description"-->
+        <!--            android:layout_alignTop="@+id/listslabel"-->
+        <!--            android:layout_alignBottom="@+id/listslabel"-->
+        <!--            android:nestedScrollingEnabled="false"-->
+        <!--            android:background="@android:drawable/editbox_background"-->
+        <!--            android:overScrollMode="never"/>-->
+
+        <android.widget.NumberPicker
             android:id="@+id/lists"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/description"
             android:layout_alignTop="@+id/listslabel"
             android:layout_alignBottom="@+id/listslabel"
-            android:nestedScrollingEnabled="false"
-            android:background="@android:drawable/editbox_background"
-            android:overScrollMode="never"/>
-        <!-- TODO: Add scrollbar-looking thing -->
+            android:solidColor="#00000000"
+            android:layoutMode="opticalBounds"
+            android:background="@drawable/layout_bg"
+            android:showDividers="none"
+            android:clipToPadding="true"
+            android:theme="@android:style/Theme.Holo.Light" />
+        <!-- FIXME: This thing is offset by one down -->
+
+        <!--
+            android:scaleX="0.5"
+            android:scaleY="0.5"
+
+            android:layout_margin="2dp"
+        -->
 
         <!-- labels row -->
         <TextView
             android:id="@+id/labelslabel"
-            android:layout_alignParentStart="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:layout_alignStart="@+id/description"
             android:layout_below="@+id/listslabel"
+            android:layout_alignStart="@+id/description"
+            android:layout_alignParentStart="true"
+            android:padding="16dp"
             android:text="Labels:" />
 
         <TextView
@@ -152,23 +174,23 @@
             android:layout_alignStart="@+id/description"
             android:layout_alignTop="@+id/labelslabel"
             android:layout_alignBottom="@+id/labelslabel"
-            android:padding="16dp"
-            android:elegantTextHeight="true"
             android:background="@android:drawable/editbox_background"
+            android:elegantTextHeight="true"
+            android:hint="Select Labels"
+            android:padding="16dp"
             android:textColor="@android:color/background_dark"
-            app:drawableRightCompat="@android:drawable/arrow_down_float"
             android:textColorHint="@color/cardview_shadow_start_color"
-            android:hint="Select Labels" />
+            app:drawableRightCompat="@android:drawable/arrow_down_float" />
 
         <!-- due date row -->
         <TextView
             android:id="@+id/duedatelabel"
-            android:layout_alignParentStart="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:layout_alignStart="@+id/description"
             android:layout_below="@+id/labelslabel"
+            android:layout_alignStart="@+id/description"
+            android:layout_alignParentStart="true"
+            android:padding="16dp"
             android:text="Due Date:" />
 
         <Button
@@ -189,25 +211,26 @@
             android:id="@+id/duedateenabled"
             android:layout_width="40dp"
             android:layout_height="50dp"
-            android:padding="16dp"
+            android:layout_below="@+id/labelslabel"
             android:layout_alignStart="@+id/description"
             android:layout_alignTop="@+id/duedatelabel"
             android:layout_alignBottom="@+id/duedatelabel"
-            android:layout_below="@+id/labelslabel"
-            android:checked="true" />
+            android:checked="true"
+            android:padding="16dp" />
 
         <!-- create card row -->
         <Button
             android:id="@+id/chosen_list_button"
-            android:layout_alignParentStart="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/description"
             android:layout_below="@+id/duedatelabel"
+            android:layout_alignStart="@+id/description"
+            android:layout_alignParentStart="true"
             android:layout_marginHorizontal="40dp"
             android:backgroundTint="@color/button_primary"
             android:text="@string/create_card_button" />
     </RelativeLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

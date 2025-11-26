@@ -19,6 +19,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
+import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -90,11 +91,20 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
 
 //        setUpSpinner(R.id.lists, LISTS);
 //        setUpDropdown(R.id.lists, LISTS, getStringFromStrings(R.string.chosen_list));
-        setUpRecycler(R.id.lists, LISTS);
+//        setUpRecycler(R.id.lists, LISTS);
+        setUpPicker(R.id.lists, LISTS);
         setUpDropdownCheckbox(R.id.labels, LABELS, getStringFromStrings(R.string.chosen_labels));
         setUpCheckBox();
         setUpDueDateButton();
         giveCreateCardButtonFunctionality();
+
+        // Source - https://stackoverflow.com/a/26450882
+// Posted by harshitpthk, modified by community. See post 'Timeline' for change history
+// Retrieved 2025-11-26, License - CC BY-SA 4.0
+
+
+
+
     }
 
     @Override
@@ -252,14 +262,19 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         return text.getText().toString();
     }
 
+    private String getTextFromPicker(int id, String[] list) {
+        NumberPicker np = findViewById(id);
+        return list[np.getValue()];
+    }
+
     private String getTextFromRecycler(int id) {
         RecyclerView rv = findViewById(id);
-        TextView focusedView = (TextView) rv.getFocusedChild();
+        String focusedView = ((MyRecyclerViewAdapter) rv.getAdapter()).getFocusedItem();
         if (focusedView == null) {
             Log.w(LOG_TAG, "Null focusedview");
             return "";
         }
-        return focusedView.getText().toString();
+        return focusedView;
     }
 
     private String getTextFromSpinner(int id) {
@@ -300,19 +315,33 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         });
     }
 
-    private void setUpRecycler(int id, String[] list) {
-        // data to populate the RecyclerView with
-        ArrayList<String> recyclerItems = new ArrayList<>();
-        recyclerItems.addAll(Arrays.asList(list));
+//    private void setUpRecycler(int id, String[] list) {
+//        // data to populate the RecyclerView with
+//        ArrayList<String> recyclerItems = new ArrayList<>();
+//        recyclerItems.addAll(Arrays.asList(list));
+//
+//        // set up the RecyclerView
+//        RecyclerView recyclerView = findViewById(R.id.lists);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        adapter = new MyRecyclerViewAdapter(this, recyclerItems);
+//        adapter.setClickListener(this);
+//        recyclerView.setAdapter(adapter);
+//        SnapHelper helper = new PagerSnapHelper();
+//        helper.attachToRecyclerView(recyclerView);
+//    }
 
-        // set up the RecyclerView
-        RecyclerView recyclerView = findViewById(R.id.lists);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new MyRecyclerViewAdapter(this, recyclerItems);
-        adapter.setClickListener(this);
-        recyclerView.setAdapter(adapter);
-        SnapHelper helper = new PagerSnapHelper();
-        helper.attachToRecyclerView(recyclerView);
+    private void setUpPicker(int id, String[] arr) {
+        NumberPicker numberPicker = findViewById(id);
+        numberPicker.setMinValue(0);
+        numberPicker.setMaxValue(arr.length-1);
+
+        numberPicker.setFormatter(new NumberPicker.Formatter() {
+            @Override
+            public String format(int value) {
+                // TODO Auto-generated method stub
+                return arr[value];
+            }
+        });
     }
 
     private void setUpDropdownCheckbox(int id, String[] arr, String title) {
@@ -491,7 +520,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
                 int delayMills = 3000;
                 String name = getTextFromTextView(R.id.name);
                 String desc = getTextFromTextView(R.id.description);
-                String list = getTextFromRecycler(R.id.lists);
+                String list = getTextFromPicker(R.id.lists, LISTS);
                 String[] labels = getTextFromTextView(R.id.labels).split(", ");
                 String date = "";
                 boolean dueDateEnabled = ((CheckBox)findViewById(R.id.duedateenabled)).isChecked();
