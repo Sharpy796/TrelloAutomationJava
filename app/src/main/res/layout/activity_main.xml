@@ -27,7 +27,7 @@
             android:background="@drawable/layout_bg"
             android:theme="@style/AppTheme.Picker"
             android:descendantFocusability="blocksDescendants" />
-        n
+
         <!-- title row -->
         <TextView
             android:id="@+id/title"
