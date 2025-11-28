@@ -134,19 +134,137 @@
         <!--            android:background="@android:drawable/editbox_background"-->
         <!--            android:overScrollMode="never"/>-->
 
-        <android.widget.NumberPicker
-            android:id="@+id/lists"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+<!--        <android.widget.NumberPicker-->
+<!--            android:id="@+id/lists"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_alignStart="@+id/description"-->
+<!--            android:layout_alignTop="@+id/listslabel"-->
+<!--            android:layout_alignBottom="@+id/listslabel"-->
+<!--            android:solidColor="#00000000"-->
+<!--            android:layoutMode="opticalBounds"-->
+<!--            android:background="@drawable/layout_bg"-->
+<!--            android:showDividers="none"-->
+<!--            android:clipToPadding="true"-->
+<!--            android:theme="@android:style/Theme.Holo.Light" />-->
+
+<!--        duck -->
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:textColor="#ffff00"-->
+<!--            android:typeface="monospace"-->
+<!--            android:layout_below="@+id/chosen_list_button"-->
+<!--            android:text="   _          _          _\n=(.)__ =(.)__ =(.)__\n (___/  (___/  (___/"/>-->
+
+<!--
+
             android:layout_alignStart="@+id/description"
             android:layout_alignTop="@+id/listslabel"
             android:layout_alignBottom="@+id/listslabel"
-            android:solidColor="#00000000"
-            android:layoutMode="opticalBounds"
+
+            android:wrapSelectorWheel="true"
+-->
+
+        <NumberPicker
+            android:id="@+id/wordPicker"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_margin="4dp"
+            android:layout_alignStart="@+id/description"
+            android:layout_alignBaseline="@+id/descriptionlabel"
             android:background="@drawable/layout_bg"
-            android:showDividers="none"
-            android:clipToPadding="true"
-            android:theme="@android:style/Theme.Holo.Light" />
+            android:theme="@style/AppTheme.Picker"
+            android:descendantFocusability="blocksDescendants" />
+
+
+        <!--        <androidx.constraintlayout.motion.widget.MotionLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            app:layoutDescription="@xml/labelpicker"-->
+<!--            android:background="@drawable/layout_bg">-->
+
+<!--            <Button android:id="@+id/imageView0"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:text="test1" />-->
+<!--&lt;!&ndash;            <Button android:id="@+id/imageView1"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_width="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_height="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:text="test2" />&ndash;&gt;-->
+<!--&lt;!&ndash;            <Button android:id="@+id/imageView2"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_width="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_height="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:text="test3" />&ndash;&gt;-->
+<!--&lt;!&ndash;            <Button android:id="@+id/imageView3"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_width="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_height="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:text="test4" />&ndash;&gt;-->
+<!--&lt;!&ndash;            <Button android:id="@+id/imageView4"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_width="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_height="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:text="test5" />&ndash;&gt;-->
+
+<!--            <androidx.constraintlayout.helper.widget.Carousel-->
+<!--                android:id="@+id/carousel"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:itemSpacing="10dp"-->
+<!--                app:carousel_forwardTransition="@+id/forward"-->
+<!--                app:carousel_backwardTransition="@+id/backward"-->
+<!--                app:carousel_previousState="@+id/previous"-->
+<!--                app:carousel_nextState="@+id/next"-->
+<!--                app:carousel_infinite="true"-->
+<!--                app:carousel_firstView="@+id/imageView2"-->
+<!--                app:constraint_referenced_ids="imageView0" />-->
+<!--&lt;!&ndash;            app:constraint_referenced_ids="imageView0,imageView1,imageView2,imageView3,imageView4" />&ndash;&gt;-->
+
+<!--        </androidx.constraintlayout.motion.widget.MotionLayout>-->
+
+
+<!--        <androidx.constraintlayout.motion.widget.MotionLayout-->
+<!--            android:id="@+id/lists"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_alignStart="@+id/description"-->
+<!--            android:layout_alignTop="@+id/listslabel"-->
+<!--            android:layout_alignBottom="@+id/listslabel"-->
+<!--            android:background="@drawable/layout_bg"-->
+<!--            app:layoutDescription="@xml/activity_main_scene">-->
+<!--            <FrameLayout-->
+<!--                android:id="@+id/textViewContainer"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent" />-->
+<!--            <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--                android:id="@+id/swipeLayout"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="0dp"-->
+<!--                android:background="@android:color/holo_purple"/>-->
+<!--            <TextView-->
+<!--                android:id="@+id/monday"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Monday"/>-->
+<!--&lt;!&ndash;            <TextView&ndash;&gt;-->
+<!--&lt;!&ndash;                android:id="@+id/tuesday"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_width="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:text="Tuesday"/>&ndash;&gt;-->
+<!--&lt;!&ndash;            <TextView&ndash;&gt;-->
+<!--&lt;!&ndash;                android:id="@+id/wednesday"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_width="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:text="Wednesday"/>&ndash;&gt;-->
+
+<!--        </androidx.constraintlayout.motion.widget.MotionLayout>-->
+
+<!--        <android.widget.NumberPicker-->
+<!--            android:id="@+id/lists"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_alignStart="@+id/description"-->
+<!--            android:layout_alignTop="@+id/listslabel"-->
+<!--            android:layout_alignBottom="@+id/listslabel"/>-->
         <!-- FIXME: This thing is offset by one down -->
 
         <!--

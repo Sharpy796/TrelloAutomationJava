@@ -2,15 +2,19 @@ package com.example.trelloautomationjava;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.InputType;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -18,6 +22,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
@@ -28,6 +33,7 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.helper.widget.Carousel;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -44,6 +50,7 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -66,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
     final LocalDateTime todayDate = getToday();
     int[] dueDate = new int[5];
     int checkedListItem = 0;
+    private String[] displayList;   // repeated words to simulate infinite scroll
 
     private LayoutInflater mInflater;
 
@@ -92,7 +100,37 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
 //        setUpSpinner(R.id.lists, LISTS);
 //        setUpDropdown(R.id.lists, LISTS, getStringFromStrings(R.string.chosen_list));
 //        setUpRecycler(R.id.lists, LISTS);
-        setUpPicker(R.id.lists, LISTS);
+//        setUpPicker(R.id.lists, LISTS);
+//        Carousel carousel = findViewById(R.id.carousel);
+//        carousel.setAdapter(new Carousel.Adapter() {
+//            @Override
+//            public int count() {
+//                // Return the number of items in the Carousel.
+//                return 5;
+//            }
+//
+//            @Override
+//            public void populate(View view, int index) {
+//                // Populate the view at the given index.
+//            }
+//
+//            @Override
+//            public void onNewItem(int index) {
+//                // Called when an item is set.
+//            }
+//        });
+
+
+
+        try {
+            setUpPicker(R.id.wordPicker, LISTS);
+        } catch (Exception e) {
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            String sStackTrace = sw.toString(); // stack trace as a string
+            Log.e(LOG_TAG, sStackTrace);
+        }
         setUpDropdownCheckbox(R.id.labels, LABELS, getStringFromStrings(R.string.chosen_labels));
         setUpCheckBox();
         setUpDueDateButton();
@@ -291,7 +329,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
     private void setUpDropdown(int id, String[] arr, String title) {
         TextView textView = findViewById(id);
 
-        textView.setOnClickListener(new View.OnClickListener() {
+        textView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 // Initialize alert dialog
@@ -331,18 +369,162 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
 //    }
 
     private void setUpPicker(int id, String[] arr) {
-        NumberPicker numberPicker = findViewById(id);
-        numberPicker.setMinValue(0);
-        numberPicker.setMaxValue(arr.length-1);
+        NumberPicker picker = findViewById(id);
 
-        numberPicker.setFormatter(new NumberPicker.Formatter() {
+        String[] spacedWords = new String[arr.length];
+        for (int i = 0; i < arr.length; i++) {
+            spacedWords[i] = "\n\r\n\r" + arr[i] + "\n\r\n\r";   // one line above + below
+        }
+
+        picker.setMinValue(0);
+        picker.setMaxValue(spacedWords.length - 1);
+        picker.setWrapSelectorWheel(false);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            picker.setTextSize(40);
+        }
+
+        for (int i = 0; i < picker.getChildCount(); i++) {
+            View child = picker.getChildAt(i);
+            Log.i(LOG_TAG, "Doing something:\t"+child);
+            updateView(child);
+        }
+        picker.setValue(0); // TODO: Set current value to today's list
+        picker.setDisplayedValues(spacedWords);
+
+        picker.setOnClickListener(new OnClickListener() {
             @Override
-            public String format(int value) {
-                // TODO Auto-generated method stub
-                return arr[value];
+            public void onClick(View v) {
+
+                for (int i = 0; i < picker.getChildCount(); i++) {
+                    View child = picker.getChildAt(i);
+                    Log.i(LOG_TAG, "Doing something:\t"+child);
+                    updateView(child);
+                }
+                Log.w(LOG_TAG,""+picker.getValue());
+            }
+        });
+//        setNumberPickerTextSize(picker, 12); // adjust as needed
+
+        picker.setOnValueChangedListener((np, oldVal, newVal) -> {
+
+            String selected = arr[newVal];
+            if (!selected.isEmpty()) {
+                Log.d(LOG_TAG, "Selected word: " + selected);
             }
         });
     }
+
+    private void updateView(View view) {
+//        if (view instanceof EditText) {
+//            ((EditText) view).setTextSize(23);
+//            ((EditText) view).setTextColor(getResources().getColor(R.color.text_danger, getTheme()));
+//            ((EditText) view).setFocusable(false);
+//        }
+    }
+
+    // Call this from onCreate after setContentView(...)
+    private void setupWordPicker(NumberPicker picker, String[] words, int extraBlankLines, float textSizeSp) {
+        // Build displayed values with newline padding above and below
+        String[] displayed = new String[words.length];
+        String topBottom = "";
+        for (int i = 0; i < extraBlankLines; i++) topBottom += "\n";
+
+        for (int i = 0; i < words.length; i++) {
+            displayed[i] = topBottom + words[i] + topBottom;
+        }
+
+        picker.setMinValue(0);
+        picker.setMaxValue(displayed.length - 1);
+        picker.setDisplayedValues(displayed);
+        picker.setWrapSelectorWheel(true);
+
+        // Try to make the internal EditText multiline and set text size
+        makeNumberPickerMultiline(picker, textSizeSp);
+
+        // Optionally increase the selector wheel item height for spacing
+        increaseSelectorItemHeight(picker, dpToPx(this, 28 * extraBlankLines)); // tweak multiplier as needed
+
+        // Start at first item (or wherever)
+        picker.setValue(0);
+
+        picker.setOnValueChangedListener((np, oldVal, newVal) -> {
+            String selected = words[newVal]; // use original words array — no newlines
+            Log.d("Picker", "Selected: " + selected);
+        });
+    }
+
+    private void makeNumberPickerMultiline(NumberPicker picker, float textSizeSp) {
+        // The EditText inside NumberPicker that displays the selected item
+        for (int i = 0; i < picker.getChildCount(); i++) {
+            View child = picker.getChildAt(i);
+            if (child instanceof EditText) {
+                EditText edit = (EditText) child;
+                // Allow multiple lines
+                edit.setSingleLine(false);
+                edit.setMaxLines(3); // increase if you add many \n above
+                edit.setLines(3);
+                edit.setEllipsize(null);
+                // Make sure IME won't pop up
+//                edit.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+                // Set desired text size
+//                edit.setTextSize(textSizeSp);
+                // Center text vertically/horizontally
+//                edit.setGravity(Gravity.END);
+                break;
+            }
+        }
+    }
+
+    //
+    private void increaseSelectorItemHeight(NumberPicker picker, int extraPx) {
+        // Try reflection to increase the selector wheel item height; field name differs by Android,
+        // common ones: "mSelectorWheelItemHeight" or "mSelectionDividersDistance" etc.
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                picker.setSelectionDividerHeight(2);
+            } else {
+                Log.w(LOG_TAG, "blasdfkljasgdfkjasdf");
+            }
+//            Field field = NumberPicker.class.getDeclaredField("mSelectionDividerHeight");
+//            field.setAccessible(true);
+//            int cur = field.getInt(picker);
+//            int updated = Math.max(cur + extraPx, cur * 2); // bump it
+//            field.setInt(picker, updated);
+//
+//            // After changing internal field, request layout and update displayed values to force redraw
+//            picker.invalidate();
+//            picker.requestLayout();
+        } catch (Exception e) {
+            // Not fatal — some Android versions may not expose this field; fallback to setting EditText height
+            e.printStackTrace();
+            Log.w(LOG_TAG, "huh, something happened");
+            Log.w(LOG_TAG, e.toString());
+            // Fallback: set a taller height for the internal EditText view
+            for (int i = 0; i < picker.getChildCount(); i++) {
+                View child = picker.getChildAt(i);
+                if (child instanceof EditText) {
+                    EditText edit = (EditText) child;
+                    ViewGroup.LayoutParams lp = edit.getLayoutParams();
+                    if (lp != null) {
+                        lp.height = Math.max(lp.height, extraPx * 3 + dpToPx(this, 40)); // heuristic
+                        edit.setLayoutParams(lp);
+                    }
+                    break;
+                }
+            }
+        }
+
+        // Invalidate the picker so UI updates
+        picker.invalidate();
+    }
+
+    // small helper: convert dp to px
+    private int dpToPx(Context c, int dp) {
+        float density = c.getResources().getDisplayMetrics().density;
+        return Math.round(dp * density);
+    }
+
+
 
     private void setUpDropdownCheckbox(int id, String[] arr, String title) {
         TextView textView = findViewById(id);
@@ -350,7 +532,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         boolean[] selecteditems = new boolean[arr.length];
         ArrayList<Integer> itemList = new ArrayList<>();
 
-        textView.setOnClickListener(new View.OnClickListener() {
+        textView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 // Initialize alert dialog
@@ -504,7 +686,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
     private void setUpDueDateButton() {
         Button dueDateButton = (Button) findViewById(R.id.duedate);
         updateDueDateText();
-        dueDateButton.setOnClickListener(new View.OnClickListener() {
+        dueDateButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 openDueDatePicker();
@@ -514,13 +696,13 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
 
     private void giveCreateCardButtonFunctionality() {
         Button createCardButton = (Button) findViewById(R.id.chosen_list_button);
-        createCardButton.setOnClickListener(new View.OnClickListener() {
+        createCardButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 int delayMills = 3000;
                 String name = getTextFromTextView(R.id.name);
                 String desc = getTextFromTextView(R.id.description);
-                String list = getTextFromPicker(R.id.lists, LISTS);
+                String list = getTextFromPicker(R.id.wordPicker, LISTS);
                 String[] labels = getTextFromTextView(R.id.labels).split(", ");
                 String date = "";
                 boolean dueDateEnabled = ((CheckBox)findViewById(R.id.duedateenabled)).isChecked();
