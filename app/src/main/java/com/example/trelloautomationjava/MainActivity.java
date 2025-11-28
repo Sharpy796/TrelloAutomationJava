@@ -353,21 +353,6 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         });
     }
 
-//    private void setUpRecycler(int id, String[] list) {
-//        // data to populate the RecyclerView with
-//        ArrayList<String> recyclerItems = new ArrayList<>();
-//        recyclerItems.addAll(Arrays.asList(list));
-//
-//        // set up the RecyclerView
-//        RecyclerView recyclerView = findViewById(R.id.lists);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-//        adapter = new MyRecyclerViewAdapter(this, recyclerItems);
-//        adapter.setClickListener(this);
-//        recyclerView.setAdapter(adapter);
-//        SnapHelper helper = new PagerSnapHelper();
-//        helper.attachToRecyclerView(recyclerView);
-//    }
-
     private void setUpPicker(int id, String[] arr) {
         NumberPicker picker = findViewById(id);
 
@@ -383,27 +368,8 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
             picker.setTextSize(40);
         }
 
-        for (int i = 0; i < picker.getChildCount(); i++) {
-            View child = picker.getChildAt(i);
-            Log.i(LOG_TAG, "Doing something:\t"+child);
-            updateView(child);
-        }
         picker.setValue(0); // TODO: Set current value to today's list
         picker.setDisplayedValues(spacedWords);
-
-        picker.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                for (int i = 0; i < picker.getChildCount(); i++) {
-                    View child = picker.getChildAt(i);
-                    Log.i(LOG_TAG, "Doing something:\t"+child);
-                    updateView(child);
-                }
-                Log.w(LOG_TAG,""+picker.getValue());
-            }
-        });
-//        setNumberPickerTextSize(picker, 12); // adjust as needed
 
         picker.setOnValueChangedListener((np, oldVal, newVal) -> {
 
@@ -413,118 +379,6 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
             }
         });
     }
-
-    private void updateView(View view) {
-//        if (view instanceof EditText) {
-//            ((EditText) view).setTextSize(23);
-//            ((EditText) view).setTextColor(getResources().getColor(R.color.text_danger, getTheme()));
-//            ((EditText) view).setFocusable(false);
-//        }
-    }
-
-    // Call this from onCreate after setContentView(...)
-    private void setupWordPicker(NumberPicker picker, String[] words, int extraBlankLines, float textSizeSp) {
-        // Build displayed values with newline padding above and below
-        String[] displayed = new String[words.length];
-        String topBottom = "";
-        for (int i = 0; i < extraBlankLines; i++) topBottom += "\n";
-
-        for (int i = 0; i < words.length; i++) {
-            displayed[i] = topBottom + words[i] + topBottom;
-        }
-
-        picker.setMinValue(0);
-        picker.setMaxValue(displayed.length - 1);
-        picker.setDisplayedValues(displayed);
-        picker.setWrapSelectorWheel(true);
-
-        // Try to make the internal EditText multiline and set text size
-        makeNumberPickerMultiline(picker, textSizeSp);
-
-        // Optionally increase the selector wheel item height for spacing
-        increaseSelectorItemHeight(picker, dpToPx(this, 28 * extraBlankLines)); // tweak multiplier as needed
-
-        // Start at first item (or wherever)
-        picker.setValue(0);
-
-        picker.setOnValueChangedListener((np, oldVal, newVal) -> {
-            String selected = words[newVal]; // use original words array — no newlines
-            Log.d("Picker", "Selected: " + selected);
-        });
-    }
-
-    private void makeNumberPickerMultiline(NumberPicker picker, float textSizeSp) {
-        // The EditText inside NumberPicker that displays the selected item
-        for (int i = 0; i < picker.getChildCount(); i++) {
-            View child = picker.getChildAt(i);
-            if (child instanceof EditText) {
-                EditText edit = (EditText) child;
-                // Allow multiple lines
-                edit.setSingleLine(false);
-                edit.setMaxLines(3); // increase if you add many \n above
-                edit.setLines(3);
-                edit.setEllipsize(null);
-                // Make sure IME won't pop up
-//                edit.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-                // Set desired text size
-//                edit.setTextSize(textSizeSp);
-                // Center text vertically/horizontally
-//                edit.setGravity(Gravity.END);
-                break;
-            }
-        }
-    }
-
-    //
-    private void increaseSelectorItemHeight(NumberPicker picker, int extraPx) {
-        // Try reflection to increase the selector wheel item height; field name differs by Android,
-        // common ones: "mSelectorWheelItemHeight" or "mSelectionDividersDistance" etc.
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                picker.setSelectionDividerHeight(2);
-            } else {
-                Log.w(LOG_TAG, "blasdfkljasgdfkjasdf");
-            }
-//            Field field = NumberPicker.class.getDeclaredField("mSelectionDividerHeight");
-//            field.setAccessible(true);
-//            int cur = field.getInt(picker);
-//            int updated = Math.max(cur + extraPx, cur * 2); // bump it
-//            field.setInt(picker, updated);
-//
-//            // After changing internal field, request layout and update displayed values to force redraw
-//            picker.invalidate();
-//            picker.requestLayout();
-        } catch (Exception e) {
-            // Not fatal — some Android versions may not expose this field; fallback to setting EditText height
-            e.printStackTrace();
-            Log.w(LOG_TAG, "huh, something happened");
-            Log.w(LOG_TAG, e.toString());
-            // Fallback: set a taller height for the internal EditText view
-            for (int i = 0; i < picker.getChildCount(); i++) {
-                View child = picker.getChildAt(i);
-                if (child instanceof EditText) {
-                    EditText edit = (EditText) child;
-                    ViewGroup.LayoutParams lp = edit.getLayoutParams();
-                    if (lp != null) {
-                        lp.height = Math.max(lp.height, extraPx * 3 + dpToPx(this, 40)); // heuristic
-                        edit.setLayoutParams(lp);
-                    }
-                    break;
-                }
-            }
-        }
-
-        // Invalidate the picker so UI updates
-        picker.invalidate();
-    }
-
-    // small helper: convert dp to px
-    private int dpToPx(Context c, int dp) {
-        float density = c.getResources().getDisplayMetrics().density;
-        return Math.round(dp * density);
-    }
-
-
 
     private void setUpDropdownCheckbox(int id, String[] arr, String title) {
         TextView textView = findViewById(id);
