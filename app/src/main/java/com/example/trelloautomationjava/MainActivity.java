@@ -366,6 +366,8 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         picker.setWrapSelectorWheel(false);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             picker.setTextSize(40);
+        } else {
+            Log.w(LOG_TAG, "Cannot change picker text size, build version is not correct.");
         }
 
         picker.setValue(0); // TODO: Set current value to today's list
