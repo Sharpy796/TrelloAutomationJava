@@ -99,13 +99,15 @@
             android:layout_alignTop="@+id/listslabel"
             android:layout_alignBottom="@+id/listslabel"
             android:clipChildren="true"
-            android:background="@android:color/white">
+            android:background="@android:drawable/editbox_background">
 
             <com.example.trelloautomationjava.FlexibleNumberPicker
                 android:id="@+id/listPicker"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center"
+                android:theme="@style/AppTheme.FlexiblePicker"
+                android:paddingStart="5dp"/>
         </FrameLayout>
 
         <!-- labels row -->
