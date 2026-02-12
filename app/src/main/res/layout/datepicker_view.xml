@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
     <DatePicker
         android:id="@+id/datepicker"
         android:layout_width="wrap_content"
@@ -43,8 +42,6 @@
             android:theme="@style/AppTheme.FlexiblePicker"
             android:background="@android:drawable/editbox_background"/>
 
-
-        <!-- TODO: Make buttons prettier -->
         <Button
             android:id="@+id/button_am"
             android:layout_width="50dp"
@@ -58,7 +55,6 @@
             android:layout_height="match_parent"
             android:backgroundTint="@color/button_selected"
             android:textColor="@color/text_success"
-            android:theme="@style/Button.AMPM"
             android:text="PM"/>
         <Button
             android:id="@+id/button_today"
@@ -66,30 +62,4 @@
             android:layout_height="match_parent"
             android:text="Today"/>
     </LinearLayout>
-
-    <!--    </FrameLayout>-->
-
-
-
-<!--    <TimePicker-->
-<!--        android:id="@+id/timepicker"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_below="@+id/datepicker"-->
-<!--        android:layout_marginTop="60dp"-->
-<!--        android:timePickerMode="spinner" />-->
-
-<!--    <Button-->
-<!--        android:id="@+id/resetToday"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_toEndOf="@+id/timepicker"-->
-<!--        android:layout_centerInParent="true"-->
-<!--        android:gravity="center"-->
-<!--        android:text="Today"/>-->
-
-<!--
-        android:layout_below="@+id/datepicker"
-        android:layout_toEndOf="@id/timepicker"
--->
 </RelativeLayout>

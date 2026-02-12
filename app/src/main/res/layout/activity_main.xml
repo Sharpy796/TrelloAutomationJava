@@ -158,8 +158,9 @@
             android:layout_marginTop="0dp"
             android:layout_marginBottom="0dp"
             android:elegantTextHeight="true"
-            android:text="No Due Date"
-            android:textColor="@android:color/background_dark" />
+            android:text="Setting due date..."
+            android:backgroundTint="@color/button_primary"
+            android:textColor="@color/text_on_primary" />
 
         <CheckBox
             android:id="@+id/duedateenabled"
@@ -170,7 +171,9 @@
             android:layout_alignTop="@+id/duedatelabel"
             android:layout_alignBottom="@+id/duedatelabel"
             android:checked="true"
-            android:padding="16dp" />
+            android:layout_marginLeft="10dp"
+            android:buttonTint="@color/text_on_primary"
+            android:elevation="4dp"/>
 
         <!-- create card row -->
         <Button
@@ -182,6 +185,7 @@
             android:layout_alignParentStart="true"
             android:layout_marginHorizontal="40dp"
             android:backgroundTint="@color/button_primary"
+            android:textColor="@color/text_on_primary"
             android:text="@string/create_card_button" />
     </RelativeLayout>
 

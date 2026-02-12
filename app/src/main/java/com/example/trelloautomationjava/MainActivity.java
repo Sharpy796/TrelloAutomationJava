@@ -81,14 +81,10 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
     final Handler CreateCardRunnableHandler = new Handler();
     final LocalDateTime todayDate = getToday();
     int[] dueDate = new int[6];
-    int checkedListItem = 0;
 
     MyRecyclerViewAdapter adapter;
 
-
-
     public MainActivity() throws JSONException, IOException {}
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -408,18 +404,19 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
     private void postAlertToButton(Button button, String message, int delayMillis, int code) {
         button.setText(message);
         if (code == 1) {
-            button.setBackgroundColor(getResources().getColor(R.color.button_success));
-            button.setTextColor(getResources().getColor(R.color.text_success));
+
+            button.setBackgroundTintList(getResources().getColorStateList(R.color.button_success, null));
+            button.setTextColor(getResources().getColorStateList(R.color.text_success, null));
         } if (code == 2) {
-            button.setBackgroundColor(getResources().getColor(R.color.button_danger));
-            button.setTextColor(getResources().getColor(R.color.text_danger));
+            button.setBackgroundTintList(getResources().getColorStateList(R.color.button_danger, null));
+            button.setTextColor(getResources().getColorStateList(R.color.text_danger, null));
         }
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 button.setText(getStringFromStrings(R.string.create_card_button));
-                button.setBackgroundColor(getResources().getColor(R.color.button_primary));
-                button.setTextColor(getResources().getColor(R.color.text_on_primary));
+                button.setBackgroundTintList(getResources().getColorStateList(R.color.button_primary, null));
+                button.setTextColor(getResources().getColorStateList(R.color.text_on_primary, null));
             }
         };
         CreateCardRunnableHandler.removeCallbacksAndMessages(null);
@@ -446,10 +443,16 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
+                    checkBox.setButtonTintList(getResources().getColorStateList(R.color.text_on_primary, null));
                     dueDateButton.setEnabled(true);
+                    dueDateButton.setBackgroundTintList(getResources().getColorStateList(R.color.button_primary, null));
+                    dueDateButton.setTextColor(getResources().getColorStateList(R.color.text_on_primary, null));
                     updateDueDateText();
                 } else {
+                    checkBox.setButtonTintList(getResources().getColorStateList(android.R.color.darker_gray, null));
                     dueDateButton.setEnabled(false);
+                    dueDateButton.setBackgroundTintList(getResources().getColorStateList(R.color.grey, null));
+                    dueDateButton.setTextColor(getResources().getColorStateList(android.R.color.background_dark, null));
                     dueDateButton.setText("No Due Date");
                 }
             }
@@ -458,23 +461,6 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
 
     private String parseDueDateVisual() {
         return "WIP DUE DATE";
-    }
-
-    private void removeParent(boolean showTime, AlertDialog.Builder builder, TimePicker tp, DatePicker dp) {
-        ViewGroup par = null;
-        try {
-            showTime = !showTime;
-            if (showTime) {
-                par = (ViewGroup)dp.getParent();
-                if (par != null) {par.removeView(dp);}
-            } else {
-                par = (ViewGroup)tp.getParent();
-                if (par != null) {par.removeView(tp);}
-            }
-        } catch (Exception e) {
-            Log.w(LOG_TAG, "Error removing parent");
-            Log.w(LOG_TAG, e.toString());
-        }
     }
 
     private void setUpDueDateButton() {
