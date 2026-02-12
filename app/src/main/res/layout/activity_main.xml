@@ -121,11 +121,17 @@
             android:clipChildren="true"
             android:background="@android:color/white">
 
-            <NumberPicker
+            <com.example.trelloautomationjava.FlexibleNumberPicker
                 android:id="@+id/listPicker"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"/>
+
+<!--            <NumberPicker-->
+<!--                android:id="@+id/listPicker"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="150dp"-->
+<!--                android:layout_gravity="center" />-->
         </FrameLayout>
 
         <!-- labels row -->
