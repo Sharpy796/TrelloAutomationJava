@@ -43,22 +43,27 @@
             android:theme="@style/AppTheme.FlexiblePicker"
             android:background="@android:drawable/editbox_background"/>
 
-        <!-- TODO: Make buttons prettier        -->
+
+        <!-- TODO: Make buttons prettier -->
         <Button
             android:id="@+id/button_am"
-            android:layout_width="40dp"
+            android:layout_width="50dp"
             android:layout_height="match_parent"
+            android:textColor="@color/text_danger"
+            android:backgroundTint="@color/button_unselected"
             android:text="AM"/>
         <Button
             android:id="@+id/button_pm"
-            android:layout_width="40dp"
+            android:layout_width="50dp"
             android:layout_height="match_parent"
+            android:backgroundTint="@color/button_selected"
+            android:textColor="@color/text_success"
+            android:theme="@style/Button.AMPM"
             android:text="PM"/>
         <Button
-            android:layout_width="60dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="Today"/>
-
     </LinearLayout>
 
     <!--    </FrameLayout>-->

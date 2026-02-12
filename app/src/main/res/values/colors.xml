@@ -6,6 +6,8 @@
     <color name="button_secondary">#FFC107</color>
     <color name="button_danger">#F44336</color>
     <color name="button_success">#4CAF50</color>
+    <color name="button_selected">#31F412</color>
+    <color name="button_unselected">#FA0D0D</color>
     <color name="text_on_primary">#1b1474</color>
     <color name="text_on_secondary">#000000</color>
     <color name="text_danger">#520B05</color>

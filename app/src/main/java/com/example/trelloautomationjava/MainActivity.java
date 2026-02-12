@@ -137,6 +137,27 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         setUpListPicker(hp, HOUR_ARR_STR, 6, Gravity.CENTER_HORIZONTAL);
         setUpListPicker(mp, MIN_ARR_STR, 0, Gravity.CENTER_HORIZONTAL);
 
+        Button buttonAM = linlayout.findViewById(R.id.button_am);
+        Button buttonPM = linlayout.findViewById(R.id.button_pm);
+        buttonAM.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(LOG_TAG, "am pressed");
+                buttonAM.setBackgroundTintList(getResources().getColorStateList(R.color.button_selected, null));
+                buttonPM.setBackgroundTintList(getResources().getColorStateList(R.color.button_unselected, null));
+
+            }
+        });
+        buttonPM.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(LOG_TAG, "pm pressed");
+                buttonPM.setBackgroundTintList(getResources().getColorStateList(R.color.button_selected, null));
+                buttonAM.setBackgroundTintList(getResources().getColorStateList(R.color.button_unselected, null));
+            }
+        });
+//            buttonAM.setBackground(ContextCompat.getDrawable(this, R.drawable.button_rectangle_green));
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Pick Due Date");
         builder.setView(linlayout);

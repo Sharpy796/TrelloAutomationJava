@@ -7,4 +7,8 @@
     <style name="AppTheme.FlexiblePicker" parent="Theme.AppCompat.Light">
         <item name="colorControlNormal">@color/button_danger</item>
     </style>
+    <style name="Button.AMPM" parent="ThemeOverlay.AppCompat">
+        <item name="cornerRadius">0dp</item>
+        <item name="android:background">@drawable/abc_btn_default_mtrl_shape</item>
+    </style>
 </resources>
