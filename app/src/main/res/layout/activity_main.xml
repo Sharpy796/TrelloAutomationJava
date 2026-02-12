@@ -17,17 +17,6 @@
         android:gravity="top"
         tools:context=".MainActivity">
 
-        <NumberPicker
-            android:id="@+id/wordPicker"
-            android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:layout_margin="4dp"
-            android:layout_alignStart="@+id/description"
-            android:layout_alignBaseline="@+id/descriptionlabel"
-            android:background="@drawable/layout_bg"
-            android:theme="@style/AppTheme.Picker"
-            android:descendantFocusability="blocksDescendants" />
-
         <!-- title row -->
         <TextView
             android:id="@+id/title"
@@ -101,6 +90,43 @@
             android:layout_alignParentStart="true"
             android:padding="16dp"
             android:text="List:" />
+
+        <!--        <NumberPicker-->
+        <!--            android:id="@+id/wordPicker"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="120dp"-->
+        <!--            android:layout_margin="4dp"-->
+        <!--            android:layout_alignStart="@+id/description"-->
+        <!--            android:layout_alignBaseline="@+id/descriptionlabel"-->
+        <!--            android:background="@drawable/layout_bg"-->
+        <!--            android:theme="@style/AppTheme.Picker"-->
+        <!--            android:descendantFocusability="blocksDescendants" />-->
+
+<!--        <NumberPicker-->
+<!--            android:id="@+id/listPicker"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_alignStart="@+id/description"-->
+<!--            android:layout_alignTop="@+id/listslabel"-->
+<!--            android:layout_alignBottom="@+id/listslabel"-->
+<!--            android:theme="@style/AppTheme.Picker" />-->
+
+        <FrameLayout
+            android:id="@+id/listPickerContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/description"
+            android:layout_alignTop="@+id/listslabel"
+            android:layout_alignBottom="@+id/listslabel"
+            android:clipChildren="true"
+            android:background="@android:color/white">
+
+            <NumberPicker
+                android:id="@+id/listPicker"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_gravity="center" />
+        </FrameLayout>
 
         <!-- labels row -->
         <TextView
@@ -184,6 +210,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:text="Version 1.1"/>
+            android:text="Version 1.1 Beta"/>
     </LinearLayout>
 </LinearLayout>

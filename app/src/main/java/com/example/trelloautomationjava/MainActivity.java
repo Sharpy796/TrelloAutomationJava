@@ -1,10 +1,12 @@
 package com.example.trelloautomationjava;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
+import android.graphics.Paint;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -79,11 +81,15 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
 
     MyRecyclerViewAdapter adapter;
 
-    public MainActivity() throws JSONException, IOException {
-    }
+    private NumberPicker listPicker;
+    private String[] listOptions = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday", "Later"};
+
+
+    public MainActivity() throws JSONException, IOException {}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             updateDueDateValue(todayDate.getYear(), todayDate.getMonthValue(), todayDate.getDayOfMonth(), 19, 0);
         }
@@ -95,6 +101,14 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+//        for (int i = 0; i < listOptions.length; i++) {
+//            int len = listOptions[i].length();
+//            for (int j = 0; j < (65-len); j++) {
+//                listOptions[i] = listOptions[i] + " ";
+//
+//            }
+//        }
 
 
 //        setUpSpinner(R.id.lists, LISTS);
@@ -122,15 +136,77 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
 
 
 
-        try {
-            setUpPicker(R.id.wordPicker, LISTS);
-        } catch (Exception e) {
-            StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw);
-            e.printStackTrace(pw);
-            String sStackTrace = sw.toString(); // stack trace as a string
-            Log.e(LOG_TAG, sStackTrace);
-        }
+
+
+        // Initialize the NumberPicker
+        listPicker = findViewById(R.id.listPicker);
+
+        // Set the minimum and maximum values
+        listPicker.setMinValue(0);
+        listPicker.setMaxValue(listOptions.length - 1);
+
+        // Set the display values
+        listPicker.setDisplayedValues(listOptions);
+
+        // Disable wrapping (so it doesn't loop from "Later" back to "Monday")
+        listPicker.setWrapSelectorWheel(false);
+
+
+        // Optional: Set a default value (e.g., "Monday" which is index 0)
+        listPicker.setValue(0); // TODO: Set this default to the current day
+
+//        // Force left alignment by using a custom formatter
+//        listPicker.setFormatter(new NumberPicker.Formatter() {
+//            @Override
+//            public String format(int value) {
+//                // Add spaces to the right to push text left visually
+//                return String.format("%-15s", listOptions[value]);
+//            }
+//        });
+        // In your onCreate method, you can also hide the dividers if desired:
+        listPicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+
+//        // Disable the EditText to prevent centered input
+//        for (int i = 0; i < listPicker.getChildCount(); i++) {
+//            View child = listPicker.getChildAt(i);
+//            if (child instanceof EditText) {
+//                EditText editText = (EditText) child;
+//                editText.setFocusable(false);
+//                editText.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
+//            }
+//        }
+        // Align text to the left
+//        alignNumberPickerText(listPicker);
+
+
+        // Optional: Add a listener to respond to value changes
+        listPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                String selectedList = listOptions[newVal];
+                // Do something with the selected list
+//                Toast.makeText(MainActivity.this,
+//                        "Selected: " + selectedList,
+//                        Toast.LENGTH_SHORT).show();
+                try {
+                    TextView npTextView = (TextView) listPicker.getChildAt(0);
+                    npTextView.setGravity(Gravity.START);
+                } catch(Exception e) {
+                    Log.wtf(LOG_TAG, e);
+                }
+            }
+        });
+
+
+//        try {
+//            setUpPicker(R.id.wordPicker, LISTS);
+//        } catch (Exception e) {
+//            StringWriter sw = new StringWriter();
+//            PrintWriter pw = new PrintWriter(sw);
+//            e.printStackTrace(pw);
+//            String sStackTrace = sw.toString(); // stack trace as a string
+//            Log.e(LOG_TAG, sStackTrace);
+//        }
         setUpDropdownCheckbox(R.id.labels, LABELS, getStringFromStrings(R.string.chosen_labels));
         setUpCheckBox();
         setUpDueDateButton();
@@ -143,6 +219,51 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
 
 
 
+    }
+
+    private void alignNumberPickerText(NumberPicker picker) {
+        try {
+            // Method 1: Try to access the Paint object used for drawing
+//            @SuppressLint("SoonBlockedPrivateApi") Field field = NumberPicker.class.getDeclaredField("mSelectorWheelPaint");
+            Field field = NumberPicker.class.getDeclaredField("mSelectorWheelPaint");
+            field.setAccessible(true);
+            Paint paint = (Paint) field.get(picker);
+            if (paint != null) {
+                paint.setTextAlign(Paint.Align.LEFT);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Method 2: Also align the EditText for the currently selected value
+        for (int i = 0; i < picker.getChildCount(); i++) {
+            View child = picker.getChildAt(i);
+            if (child instanceof EditText) {
+                EditText editText = (EditText) child;
+                editText.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
+                editText.setPadding(20, 0, 0, 0);
+            }
+        }
+
+        // Method 3: Add a listener to reapply alignment after scrolling
+        picker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                // Reapply EditText alignment
+                for (int i = 0; i < picker.getChildCount(); i++) {
+                    View child = picker.getChildAt(i);
+                    if (child instanceof EditText) {
+                        ((EditText) child).setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
+                    }
+                }
+            }
+        });
+    }
+
+    // Method to get the currently selected list when the button is clicked
+    private String getSelectedList() {
+        int index = listPicker.getValue();
+        return listOptions[index];
     }
 
     @Override
@@ -558,7 +679,8 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
                 int delayMills = 3000;
                 String name = getTextFromTextView(R.id.name);
                 String desc = getTextFromTextView(R.id.description);
-                String list = getTextFromPicker(R.id.wordPicker, LISTS);
+//                String list = getTextFromPicker(R.id.wordPicker, LISTS);
+                String list = "Monday";
                 String[] labels = getTextFromTextView(R.id.labels).split(", ");
                 String date = "";
                 boolean dueDateEnabled = ((CheckBox)findViewById(R.id.duedateenabled)).isChecked();
