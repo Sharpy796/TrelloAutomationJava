@@ -61,6 +61,7 @@
             android:theme="@style/Button.AMPM"
             android:text="PM"/>
         <Button
+            android:id="@+id/button_today"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="Today"/>

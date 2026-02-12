@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
 //    public final String[]  MIN_ARR_STR = {"00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59"};
     public final String[] MIN_ARR_STR = {"00","05","10","15","20","25","30","35","40","45","50","55"};
     public final int[] HOUR_ARR_INT = {1,2,3,4,5,6,7,8,9,10,11,12};
-    public final int[] MIN_ARR_INT = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59};
+    public final int[] MIN_ARR_INT = {0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55};
     final Handler CreateCardRunnableHandler = new Handler();
     final LocalDateTime todayDate = getToday();
     int[] dueDate = new int[6];
@@ -132,15 +132,36 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         LayoutInflater inflater = LayoutInflater.from(this); // or getLayoutInflater() in an Activity
         View linlayout = inflater.inflate(R.layout.datepicker_view, null); // The second argument is the parent ViewGroup, null for now.
         DatePicker dp = (DatePicker) linlayout.findViewById(R.id.datepicker);
+        dp.updateDate(dueDate[0], dueDate[1]-1, dueDate[2]);
         FlexibleNumberPicker hp = (FlexibleNumberPicker) linlayout.findViewById(R.id.hours);
         FlexibleNumberPicker mp = (FlexibleNumberPicker) linlayout.findViewById(R.id.mins);
         setUpListPicker(hp, HOUR_ARR_STR, dueDate[3]-(dueDate[3] > 12 ? 13 : 1), Gravity.CENTER_HORIZONTAL);
         setUpListPicker(mp, MIN_ARR_STR, dueDate[4]/5, Gravity.CENTER_HORIZONTAL);
         Button buttonAM = linlayout.findViewById(R.id.button_am);
         Button buttonPM = linlayout.findViewById(R.id.button_pm);
+        Button buttonToday = linlayout.findViewById(R.id.button_today);
 
         int[] ampm = new int[1];
         ampm[0] = dueDate[5];
+
+        buttonToday.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(LOG_TAG, "reset to today");
+                hp.setValue(6);
+                mp.setValue(0);
+                buttonPM.setBackgroundTintList(getResources().getColorStateList(R.color.button_selected, null));
+                buttonPM.setTextColor(getResources().getColorStateList(R.color.text_success, null));
+                buttonAM.setBackgroundTintList(getResources().getColorStateList(R.color.button_unselected, null));
+                buttonAM.setTextColor(getResources().getColorStateList(R.color.text_danger, null));
+                ampm[0] = 1;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    dp.updateDate(todayDate.getYear(), todayDate.getMonthValue()-1, todayDate.getDayOfMonth());
+                } else {
+                    Log.w(LOG_TAG, "BWAHHHH I HATE THISSS");
+                }
+            }
+        });
 
         if (ampm[0] == 0) {
             buttonAM.setBackgroundTintList(getResources().getColorStateList(R.color.button_selected, null));
@@ -200,50 +221,8 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
             }
         });
 
-        builder.setNeutralButton("Today", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-            }
-        });
-
         builder.show();
-
     }
-
-//    private void openDatePicker() {
-//        LocalDateTime today = getToday();
-//        DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
-//            @Override
-//            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-//                openTimePicker(year, month+1, dayOfMonth);
-//            }
-//        };
-//        DatePickerDialog datePickerDialog = null;
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            datePickerDialog = new DatePickerDialog(this,
-//    //                android.R.style.Theme,
-//                    dateSetListener, dueDate[0], dueDate[1]-1, dueDate[2]);
-//        } else {
-//            Log.w(LOG_TAG, "Why do i have to do this fricken thing aaaaaaaaa.");
-//        }
-//
-//        datePickerDialog.show();
-//    }
-//    private void openTimePicker(int year, int monthOfYear, int dayOfMonth) {
-//        TimePickerDialog.OnTimeSetListener timeSetListener = new TimePickerDialog.OnTimeSetListener() {
-//            @Override
-//            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-//                updateDueDateText(year, monthOfYear, dayOfMonth, hourOfDay, minute);
-//                updateDueDateValue(year, monthOfYear, dayOfMonth, hourOfDay, minute);
-//            }
-//        };
-//        // TODO: Fix display of this so the ok button is in the same spot as the datepicker's
-//        TimePickerDialog timePickerDialog = new TimePickerDialog(this,
-//                android.R.style.Theme_Holo_Dialog_NoActionBar,
-//                timeSetListener, dueDate[3], dueDate[4], false);
-//        timePickerDialog.show();
-//    }
 
     private void updateDueDateText() {
         updateDueDateText(dueDate[0],dueDate[1],dueDate[2],dueDate[3],dueDate[4]);
