@@ -91,26 +91,6 @@
             android:padding="16dp"
             android:text="List:" />
 
-        <!--        <NumberPicker-->
-        <!--            android:id="@+id/wordPicker"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="120dp"-->
-        <!--            android:layout_margin="4dp"-->
-        <!--            android:layout_alignStart="@+id/description"-->
-        <!--            android:layout_alignBaseline="@+id/descriptionlabel"-->
-        <!--            android:background="@drawable/layout_bg"-->
-        <!--            android:theme="@style/AppTheme.Picker"-->
-        <!--            android:descendantFocusability="blocksDescendants" />-->
-
-<!--        <NumberPicker-->
-<!--            android:id="@+id/listPicker"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_alignStart="@+id/description"-->
-<!--            android:layout_alignTop="@+id/listslabel"-->
-<!--            android:layout_alignBottom="@+id/listslabel"-->
-<!--            android:theme="@style/AppTheme.Picker" />-->
-
         <FrameLayout
             android:id="@+id/listPickerContainer"
             android:layout_width="match_parent"
@@ -126,12 +106,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
                 android:layout_gravity="center"/>
-
-<!--            <NumberPicker-->
-<!--                android:id="@+id/listPicker"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="150dp"-->
-<!--                android:layout_gravity="center" />-->
         </FrameLayout>
 
         <!-- labels row -->
