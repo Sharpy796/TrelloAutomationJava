@@ -101,13 +101,14 @@
             android:clipChildren="true"
             android:background="@android:drawable/editbox_background">
 
+            <!-- TODO: Make this not snap on the first and last items -->
             <com.example.trelloautomationjava.FlexibleNumberPicker
                 android:id="@+id/listPicker"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="120dp"
                 android:layout_gravity="center"
                 android:theme="@style/AppTheme.FlexiblePicker"
-                android:paddingStart="5dp"/>
+                android:paddingLeft="5dp"/>
         </FrameLayout>
 
         <!-- labels row -->
