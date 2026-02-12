@@ -272,7 +272,8 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         picker.setDisplayedValues(arr);
         picker.setMinValue(0);
         picker.setMaxValue(arr.length-1);
-        picker.setValue(0);
+        int def = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) ? todayDate.getDayOfWeek().getValue()-1 : 0;
+        picker.setValue(def);
         picker.setWrapSelectorWheel(false);
         picker.setGravity(Gravity.LEFT);
         picker.setOnValueChangedListener((np, ildVal, newVal) -> {
