@@ -1,17 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+
     <DatePicker
         android:id="@+id/datepicker"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-    <TimePicker
-        android:id="@+id/timepicker"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:timePickerMode="spinner"/>
+        android:layout_below="@id/timepickercontainer"/>
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/timepickercontainer"
+        android:layout_width="100dp"
+        android:layout_height="80dp"
+        android:layout_alignStart="@+id/datepicker"
+        android:layout_alignEnd="@+id/datepicker"
+        android:layout_gravity="center"
+        android:clipChildren="true"
+        android:padding="20dp">
+
+        <com.example.trelloautomationjava.FlexibleNumberPicker
+            android:id="@+id/hours"
+            android:layout_width="40dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center_vertical"
+            android:theme="@style/AppTheme.FlexiblePicker"
+            android:background="@android:drawable/editbox_background"/>
+
+        <TextView
+            android:layout_width="5dp"
+            android:layout_height="match_parent"
+            android:text=":"
+            android:gravity="center_vertical"/>
+
+        <com.example.trelloautomationjava.FlexibleNumberPicker
+            android:id="@+id/mins"
+            android:layout_width="40dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center_vertical"
+            android:theme="@style/AppTheme.FlexiblePicker"
+            android:background="@android:drawable/editbox_background"/>
+
+        <!-- TODO: Make buttons prettier        -->
+        <Button
+            android:id="@+id/button_am"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:text="AM"/>
+        <Button
+            android:id="@+id/button_pm"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:text="PM"/>
+        <Button
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:text="Today"/>
+
+    </LinearLayout>
+
+    <!--    </FrameLayout>-->
+
+
+
+<!--    <TimePicker-->
+<!--        android:id="@+id/timepicker"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_below="@+id/datepicker"-->
+<!--        android:layout_marginTop="60dp"-->
+<!--        android:timePickerMode="spinner" />-->
+
+<!--    <Button-->
+<!--        android:id="@+id/resetToday"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_toEndOf="@+id/timepicker"-->
+<!--        android:layout_centerInParent="true"-->
+<!--        android:gravity="center"-->
+<!--        android:text="Today"/>-->
+
+<!--
+        android:layout_below="@+id/datepicker"
+        android:layout_toEndOf="@id/timepicker"
+-->
+</RelativeLayout>

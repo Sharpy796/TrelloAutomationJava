@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
             return insets;
         });
 
-        setUpListPicker(R.id.listPicker, LISTS);
+        setUpListPicker(R.id.listPicker, LISTS, (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) ? todayDate.getDayOfWeek().getValue()-1 : 0, Gravity.LEFT);
         setUpDropdownCheckbox(R.id.labels, LABELS, getStringFromStrings(R.string.chosen_labels));
         setUpCheckBox();
         setUpDueDateButton();
@@ -128,11 +128,14 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
     }
 
     private void openDueDatePicker() {
-        LocalDateTime today = getToday();
+//        LocalDateTime today = getToday();
         LayoutInflater inflater = LayoutInflater.from(this); // or getLayoutInflater() in an Activity
         View linlayout = inflater.inflate(R.layout.datepicker_view, null); // The second argument is the parent ViewGroup, null for now.
         DatePicker dp = (DatePicker) linlayout.findViewById(R.id.datepicker);
-        TimePicker tp = (TimePicker) linlayout.findViewById(R.id.timepicker);
+        FlexibleNumberPicker hp = (FlexibleNumberPicker) linlayout.findViewById(R.id.hours);
+        FlexibleNumberPicker mp = (FlexibleNumberPicker) linlayout.findViewById(R.id.mins);
+        setUpListPicker(hp, HOUR_ARR_STR, 6, Gravity.CENTER_HORIZONTAL);
+        setUpListPicker(mp, MIN_ARR_STR, 0, Gravity.CENTER_HORIZONTAL);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Pick Due Date");
@@ -143,10 +146,10 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
                 int year = dp.getYear();
                 int monthOfYear = dp.getMonth()+1;
                 int dayOfMonth = dp.getDayOfMonth();
-                int hourOfDay = tp.getHour();
-                int minute = tp.getMinute();
-                updateDueDateText(year, monthOfYear, dayOfMonth, hourOfDay, minute);
-                updateDueDateValue(year, monthOfYear, dayOfMonth, hourOfDay, minute);
+//                int hourOfDay = tp.getHour();
+//                int minute = tp.getMinute();
+//                updateDueDateText(year, monthOfYear, dayOfMonth, hourOfDay, minute);
+//                updateDueDateValue(year, monthOfYear, dayOfMonth, hourOfDay, minute);
             }
         });
 
@@ -267,22 +270,29 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         return text.getText().toString();
     }
 
-    private void setUpListPicker(int id, String[] arr) {
-        FlexibleNumberPicker picker = (FlexibleNumberPicker) findViewById(id);
+    private void setUpListPicker(int id, String[] arr, int default_val, int gravity) {
+        setUpListPicker((FlexibleNumberPicker) findViewById(id), arr, default_val, gravity);
+    }
 
-        picker.setDisplayedValues(arr);
-        picker.setMinValue(0);
-        picker.setMaxValue(arr.length-1);
-        int def = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) ? todayDate.getDayOfWeek().getValue()-1 : 0;
-        picker.setValue(def);
-        picker.setWrapSelectorWheel(false);
-        picker.setGravity(Gravity.LEFT);
-        picker.setOnValueChangedListener((np, ildVal, newVal) -> {
-            String selected = arr[newVal];
-            if (!selected.isEmpty()) {
-                Log.d(LOG_TAG, "Selected word: " + selected);
-            }
-        });
+    private void setUpListPicker(FlexibleNumberPicker picker, String[] arr, int default_val, int gravity) {
+        try {
+            picker.setDisplayedValues(arr);
+            picker.setMinValue(0);
+            picker.setMaxValue(arr.length - 1);
+            picker.setValue(default_val);
+            picker.setWrapSelectorWheel(false);
+            picker.setGravity(gravity);
+            picker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+
+            picker.setOnValueChangedListener((np, ildVal, newVal) -> {
+                String selected = arr[newVal];
+                if (!selected.isEmpty()) {
+                    Log.d(LOG_TAG, "Selected word: " + selected);
+                }
+            });
+        } catch (Exception e) {
+            Log.wtf(LOG_TAG, e);
+        }
     }
 
     private String getSelectedList(int id) {
