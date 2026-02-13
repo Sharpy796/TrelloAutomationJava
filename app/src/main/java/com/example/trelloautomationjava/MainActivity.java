@@ -1,70 +1,41 @@
 package com.example.trelloautomationjava;
 
-import android.animation.TimeInterpolator;
-import android.annotation.SuppressLint;
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.res.Resources;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.InputType;
-import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.NumberPicker;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
+
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.helper.widget.Carousel;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSnapHelper;
-import androidx.recyclerview.widget.PagerSnapHelper;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.SnapHelper;
-
-import com.google.android.material.navigation.NavigationBarView;
 
 import org.json.JSONException;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.lang.reflect.Field;
 import java.time.LocalDateTime;
+import java.util.Calendar;
+import java.util.TimeZone;
+import java.util.Date;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements MyRecyclerViewAdapter.ItemClickListener {
     public final String LOG_TAG = "HELLO_WORLD";
@@ -80,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
     public final int[] MIN_ARR_INT = {0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55};
     final Handler CreateCardRunnableHandler = new Handler();
     final LocalDateTime todayDate = getToday();
+    final TimeZone timeZone = TimeZone.getTimeZone("America/Chicago");
     int[] dueDate = new int[6];
 
     MyRecyclerViewAdapter adapter;
@@ -248,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         } message += dueDate[3]+":";
         if (dueDate[4] < 10) { // minute
             message += "0";
-        } message += dueDate[4]+":00-06:00";
+        } message += dueDate[4]+":00-0"+(timeZone.inDaylightTime(new Calendar(timeZone)) ? 6 : 5)+":00";
         Log.i(LOG_TAG, "Date:\t"+message);
         return message;
     }
