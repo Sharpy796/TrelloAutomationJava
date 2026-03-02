@@ -1,70 +1,41 @@
 package com.example.trelloautomationjava;
 
-import android.animation.TimeInterpolator;
-import android.annotation.SuppressLint;
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
-import android.content.Context;
+import static java.time.ZonedDateTime.now;
+
 import android.content.DialogInterface;
-import android.content.res.Resources;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.InputType;
-import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.NumberPicker;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
+
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.helper.widget.Carousel;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSnapHelper;
-import androidx.recyclerview.widget.PagerSnapHelper;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.SnapHelper;
-
-import com.google.android.material.navigation.NavigationBarView;
 
 import org.json.JSONException;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.lang.reflect.Field;
-import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements MyRecyclerViewAdapter.ItemClickListener {
     public final String LOG_TAG = "HELLO_WORLD";
@@ -79,8 +50,10 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
     public final int[] HOUR_ARR_INT = {1,2,3,4,5,6,7,8,9,10,11,12};
     public final int[] MIN_ARR_INT = {0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55};
     final Handler CreateCardRunnableHandler = new Handler();
-    final LocalDateTime todayDate = getToday();
-    int[] dueDate = new int[6];
+    ZoneId zoneId = ZoneId.of("America/Chicago");
+    final ZonedDateTime todayDate = now(zoneId);
+    ZonedDateTime dueDate = now(zoneId);
+    DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
     MyRecyclerViewAdapter adapter;
 
@@ -88,10 +61,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            updateDueDateValue(todayDate.getYear(), todayDate.getMonthValue(), todayDate.getDayOfMonth(), 19, 0, 1);
-        }
+        updateDueDateValue(todayDate.getYear(), todayDate.getMonthValue(), todayDate.getDayOfMonth(), 19, 0);
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
@@ -101,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
             return insets;
         });
 
-        setUpListPicker(R.id.listPicker, LISTS, (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) ? todayDate.getDayOfWeek().getValue()-1 : 0, Gravity.LEFT);
+        setUpListPicker(R.id.listPicker, LISTS, todayDate.getDayOfWeek().getValue()-1, Gravity.LEFT);
         setUpDropdownCheckbox(R.id.labels, LABELS, getStringFromStrings(R.string.chosen_labels));
         setUpCheckBox();
         setUpDueDateButton();
@@ -113,32 +83,21 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         Toast.makeText(this, "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
     }
 
-    private LocalDateTime getToday() {
-        LocalDateTime today = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            today = LocalDateTime.now();
-        } else {
-            Log.w(LOG_TAG, "Picking today didn't work.");
-        }
-        return today;
-    }
-
     private void openDueDatePicker() {
-//        LocalDateTime today = getToday();
         LayoutInflater inflater = LayoutInflater.from(this); // or getLayoutInflater() in an Activity
         View linlayout = inflater.inflate(R.layout.datepicker_view, null); // The second argument is the parent ViewGroup, null for now.
         DatePicker dp = (DatePicker) linlayout.findViewById(R.id.datepicker);
-        dp.updateDate(dueDate[0], dueDate[1]-1, dueDate[2]);
+        dp.updateDate(dueDate.getYear(), dueDate.getMonthValue()-1, dueDate.getDayOfMonth());
         FlexibleNumberPicker hp = (FlexibleNumberPicker) linlayout.findViewById(R.id.hours);
         FlexibleNumberPicker mp = (FlexibleNumberPicker) linlayout.findViewById(R.id.mins);
-        setUpListPicker(hp, HOUR_ARR_STR, dueDate[3]-(dueDate[3] > 12 ? 13 : 1), Gravity.CENTER_HORIZONTAL);
-        setUpListPicker(mp, MIN_ARR_STR, dueDate[4]/5, Gravity.CENTER_HORIZONTAL);
+        setUpListPicker(hp, HOUR_ARR_STR, dueDate.getHour()-(dueDate.getHour() > 12 ? 13 : 1), Gravity.CENTER_HORIZONTAL);
+        setUpListPicker(mp, MIN_ARR_STR, dueDate.getMinute()/5, Gravity.CENTER_HORIZONTAL);
         Button buttonAM = linlayout.findViewById(R.id.button_am);
         Button buttonPM = linlayout.findViewById(R.id.button_pm);
         Button buttonToday = linlayout.findViewById(R.id.button_today);
 
-        int[] ampm = new int[1];
-        ampm[0] = dueDate[5];
+        int[] is_pm = new int[1];
+        is_pm[0] = (dueDate.getHour() >= 12 ? 1 : 0);
 
         buttonToday.setOnClickListener(new OnClickListener() {
             @Override
@@ -150,16 +109,12 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
                 buttonPM.setTextColor(getResources().getColorStateList(R.color.text_success, null));
                 buttonAM.setBackgroundTintList(getResources().getColorStateList(R.color.button_unselected, null));
                 buttonAM.setTextColor(getResources().getColorStateList(R.color.text_danger, null));
-                ampm[0] = 1;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    dp.updateDate(todayDate.getYear(), todayDate.getMonthValue()-1, todayDate.getDayOfMonth());
-                } else {
-                    Log.w(LOG_TAG, "BWAHHHH I HATE THISSS");
-                }
+                is_pm[0] = 1;
+                dp.updateDate(todayDate.getYear(), todayDate.getMonthValue()-1, todayDate.getDayOfMonth());
             }
         });
 
-        if (ampm[0] == 0) {
+        if (is_pm[0] == 0) {
             buttonAM.setBackgroundTintList(getResources().getColorStateList(R.color.button_selected, null));
             buttonAM.setTextColor(getResources().getColorStateList(R.color.text_success, null));
             buttonPM.setBackgroundTintList(getResources().getColorStateList(R.color.button_unselected, null));
@@ -174,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
                 buttonAM.setTextColor(getResources().getColorStateList(R.color.text_success, null));
                 buttonPM.setBackgroundTintList(getResources().getColorStateList(R.color.button_unselected, null));
                 buttonPM.setTextColor(getResources().getColorStateList(R.color.text_danger, null));
-                ampm[0] = 0;
+                is_pm[0] = 0;
             }
         });
         buttonPM.setOnClickListener(new OnClickListener() {
@@ -185,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
                 buttonPM.setTextColor(getResources().getColorStateList(R.color.text_success, null));
                 buttonAM.setBackgroundTintList(getResources().getColorStateList(R.color.button_unselected, null));
                 buttonAM.setTextColor(getResources().getColorStateList(R.color.text_danger, null));
-                ampm[0] = 1;
+                is_pm[0] = 1;
             }
         });
 
@@ -200,13 +155,11 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
                 int dayOfMonth = dp.getDayOfMonth();
                 int hourOfDay = HOUR_ARR_INT[hp.getValue()];
                 if (hourOfDay == 12) {
-                    if (ampm[0] == 0) {hourOfDay -= 12;}
-                } else {hourOfDay += 12*(ampm[0]);}
-                Log.w(LOG_TAG, "hour:"+hourOfDay);
-                Log.w(LOG_TAG, "ampm:"+ampm[0]);
+                    if (is_pm[0] == 0) {hourOfDay -= 12;}
+                } else {hourOfDay += 12*(is_pm[0]);}
                 int minute = MIN_ARR_INT[mp.getValue()];
                 updateDueDateText(year, monthOfYear, dayOfMonth, hourOfDay, minute);
-                updateDueDateValue(year, monthOfYear, dayOfMonth, hourOfDay, minute, ampm[0]);
+                updateDueDateValue(year, monthOfYear, dayOfMonth, hourOfDay, minute);
             }
         });
 
@@ -221,34 +174,21 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
     }
 
     private void updateDueDateText() {
-        updateDueDateText(dueDate[0],dueDate[1],dueDate[2],dueDate[3],dueDate[4]);
+        updateDueDateText(
+                dueDate.getYear(),
+                dueDate.getMonthValue(),
+                dueDate.getDayOfMonth(),
+                dueDate.getHour(),
+                dueDate.getMinute());
     }
 
-    private void updateDueDateValue(int year, int monthOfYear, int dayOfMonth, int hourOfDay, int minute, int ampm) {
-        dueDate[0] = year;
-        dueDate[1] = monthOfYear;
-        dueDate[2] = dayOfMonth;
-        dueDate[3] = hourOfDay;
-        dueDate[4] = minute;
-        dueDate[5] = ampm; // 0 = AM, 1 = PM
+    private void updateDueDateValue(int year, int monthOfYear, int dayOfMonth, int hourOfDay, int minute) {
+        dueDate = ZonedDateTime.of(year,monthOfYear,dayOfMonth,hourOfDay,minute,0,0,zoneId);
     }
 
     private String parseDueDate() {
         // 2025-11-14T19:00:00-06:00
-        String message = "";
-        message += dueDate[0]+"-"; // year
-        if (dueDate[1] < 10) { // month
-            message += "0";
-        } message += dueDate[1]+"-";
-        if (dueDate[2] < 10) { // day
-            message += "0";
-        } message += dueDate[2]+"T";
-        if (dueDate[3] < 10) { // hour
-            message += "0";
-        } message += dueDate[3]+":";
-        if (dueDate[4] < 10) { // minute
-            message += "0";
-        } message += dueDate[4]+":00-06:00";
+        String message = dateFormatter.format(dueDate);
         Log.i(LOG_TAG, "Date:\t"+message);
         return message;
     }
@@ -299,13 +239,6 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
             picker.setWrapSelectorWheel(false);
             picker.setGravity(gravity);
             picker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
-
-            picker.setOnValueChangedListener((np, ildVal, newVal) -> {
-                String selected = arr[newVal];
-                if (!selected.isEmpty()) {
-                    Log.d(LOG_TAG, "Selected word: " + selected);
-                }
-            });
         } catch (Exception e) {
             Log.wtf(LOG_TAG, e);
         }
@@ -424,7 +357,6 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
     }
 
     private void setUpCheckBox() {
-        // Declare variables
         // Initialize views
         CheckBox checkBox = findViewById(R.id.duedateenabled);
         Button dueDateButton = findViewById(R.id.duedate);
@@ -488,6 +420,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
                 boolean dueDateEnabled = ((CheckBox)findViewById(R.id.duedateenabled)).isChecked();
                 if (dueDateEnabled) {
                     date = parseDueDate();
+                    Log.d(LOG_TAG,date);
                 }
 
                 String errmsg = null;
@@ -497,8 +430,17 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
                         delayMills = 1500;
                     } else {
                         createCardButton.setText("Creating Card...");
-                        cardCreator.createTrelloCard(name, list, desc, labels, date);
-                        postAlertToButton(createCardButton, "Card Created!", delayMills, 1);
+                        int errcode = cardCreator.createTrelloCard(name, list, desc, labels, date);
+                        if (errcode == 200) {
+                            postAlertToButton(createCardButton, "Card Created!", delayMills, 1);
+                        } else {
+                            errmsg = "Error Code "+errcode+" - ";
+                            switch(errcode){
+                                case 400:   errmsg += "Bad Response"; break;
+                                default:    errmsg += "What is this code????";
+                            }
+                            postAlertToButton(createCardButton, errmsg, delayMills, 2);
+                        }
                     }
                 } catch (Exception e) {
                     Log.e(LOG_TAG, "Failed creating card");
