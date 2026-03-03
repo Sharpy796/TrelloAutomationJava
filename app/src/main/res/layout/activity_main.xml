@@ -208,6 +208,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:text="Version 1.1.2 Beta"/>
+            android:text="Version 1.1.3 Beta"/>
     </LinearLayout>
 </LinearLayout>
