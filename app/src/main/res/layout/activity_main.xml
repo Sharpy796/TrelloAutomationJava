@@ -176,28 +176,29 @@
             android:elevation="4dp"/>
 
         <!-- create card row -->
-        <Button
-            android:id="@+id/chosen_list_button"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/duedatelabel"
-            android:layout_alignStart="@+id/description"
-            android:layout_marginStart="40dp"
-            android:backgroundTint="@color/button_primary"
-            android:textColor="@color/text_on_primary"
-            android:text="Create Card" />
-
-        <Button
-            android:id="@+id/clear_everything_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/duedatelabel"
-            android:layout_alignStart="@+id/chosen_list_button"
-            android:layout_alignParentStart="true"
-            android:layout_marginEnd="40dp"
-            android:backgroundTint="@color/button_primary"
-            android:textColor="@color/text_on_primary"
-            android:text="Clear"/>
+            android:layout_below="@id/duedatelabel">
+            <Button
+                android:id="@+id/clear_everything_button"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:backgroundTint="@color/button_secondary"
+                android:textColor="@color/text_on_secondary"
+                android:text="Clear"/>
+            <Button
+                android:id="@+id/chosen_list_button"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="40dp"
+                android:backgroundTint="@color/button_primary"
+                android:textColor="@color/text_on_primary"
+                android:text="@string/create_card_button" />
+        </LinearLayout>
     </RelativeLayout>
 
     <LinearLayout

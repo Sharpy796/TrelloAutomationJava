@@ -428,7 +428,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
                 String errmsg = null;
                 try {
                     if (name.isEmpty()) {
-                        errmsg = "Please enter a card name.";
+                        errmsg = "Please enter a name.";
                         delayMills = 1500;
                     } else {
                         createCardButton.setText("Creating Card...");

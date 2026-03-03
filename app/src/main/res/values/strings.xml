@@ -6,4 +6,5 @@
     <string name="minutes">00</string>
     <string name="due_date">due date thingy</string>
     <string name="update_stuff"> </string>
+    <string name="create_card_button">Create Card</string>
 </resources>
