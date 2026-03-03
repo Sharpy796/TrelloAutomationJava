@@ -39,26 +39,24 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 
-public class MainActivity extends AppCompatActivity implements MyRecyclerViewAdapter.ItemClickListener {
+public class MainActivity extends AppCompatActivity {
     public final String LOG_TAG = "HELLO_WORLD";
     CreatingCards cardCreator = new CreatingCards();
     final String[] LISTS = {"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday","Later"};
 
     String[] STUFF = new String[1];
     final String[] LABELS = cardCreator.getArrayFromJson(cardCreator.getLabels(), "name").toArray(STUFF);
+    boolean[] selecteditems;
     public final String[] HOUR_ARR_STR = {"01","02","03","04","05","06","07","08","09","10","11","12"};
 //    public final String[]  MIN_ARR_STR = {"00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59"};
     public final String[] MIN_ARR_STR = {"00","05","10","15","20","25","30","35","40","45","50","55"};
     public final int[] HOUR_ARR_INT = {1,2,3,4,5,6,7,8,9,10,11,12};
     public final int[] MIN_ARR_INT = {0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55};
-    boolean[] selecteditems;
     final Handler CreateCardRunnableHandler = new Handler();
     ZoneId zoneId = ZoneId.of("America/Chicago");
     final ZonedDateTime todayDate = now(zoneId);
     ZonedDateTime dueDate = now(zoneId);
     DateTimeFormatter dateFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
-
-    MyRecyclerViewAdapter adapter;
 
     public MainActivity() throws JSONException, IOException {}
 
@@ -80,11 +78,6 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         setUpDueDateButton();
         giveClearButtonFunctionality();
         giveCreateCardButtonFunctionality();
-    }
-
-    @Override
-    public void onItemClick(View view, int position) {
-        Toast.makeText(this, "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
     }
 
     private void openDueDatePicker() {
@@ -163,8 +156,8 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
                     if (is_pm[0] == 0) {hourOfDay -= 12;}
                 } else {hourOfDay += 12*(is_pm[0]);}
                 int minute = MIN_ARR_INT[mp.getValue()];
-                updateDueDateText(year, monthOfYear, dayOfMonth, hourOfDay, minute);
                 updateDueDateValue(year, monthOfYear, dayOfMonth, hourOfDay, minute);
+                updateDueDateText();
             }
         });
 
@@ -338,7 +331,6 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
     private void postAlertToButton(Button button, String message, int delayMillis, int code) {
         button.setText(message);
         if (code == 1) {
-
             button.setBackgroundTintList(getResources().getColorStateList(R.color.button_success, null));
             button.setTextColor(getResources().getColorStateList(R.color.text_success, null));
         } if (code == 2) {
@@ -365,7 +357,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         // Set initial checkbox status
         if (checkBox.isChecked()) {
             dueDateButton.setEnabled(true);
-            dueDateButton.setText(parseDueDateVisual());
+            updateDueDateText();
         } else {
             dueDateButton.setEnabled(false);
             dueDateButton.setText("No Due Date");
@@ -390,10 +382,6 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
                 }
             }
         });
-    }
-
-    private String parseDueDateVisual() {
-        return "WIP DUE DATE";
     }
 
     private void setUpDueDateButton() {

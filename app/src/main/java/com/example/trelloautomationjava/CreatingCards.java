@@ -156,7 +156,6 @@ public class CreatingCards {
     public int createTrelloCard(String name, String list, String desc, String[] labels, String dueDate) throws JSONException, IOException {
         fixStrictMode();
         String create_card_endpoint = TRELLO_ENDPOINT+"cards";
-        Map<String, String> jsonMap = new HashMap<>();
         RequestBody card = new FormBody.Builder()
                 .add("key", TRELLO_KEY)
                 .add("token", TRELLO_TOKEN)
