@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         setUpDropdownCheckbox(R.id.labels, LABELS, getStringFromStrings(R.string.chosen_labels));
         setUpCheckBox();
         setUpDueDateButton();
+        giveClearButtonFunctionality();
         giveCreateCardButtonFunctionality();
     }
 
@@ -404,6 +405,23 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
             @Override
             public void onClick(View v) {
                 openDueDatePicker();
+            }
+        });
+    }
+
+    private void giveClearButtonFunctionality() {
+        Button clearButton = (Button) findViewById(R.id.clear_everything_button);
+        clearButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((TextView) findViewById(R.id.name)).setText("");
+                ((TextView) findViewById(R.id.description)).setText("");
+                ((FlexibleNumberPicker) findViewById(R.id.listPicker)).setValue(todayDate.getDayOfWeek().getValue()-1);
+                String list = getSelectedList(R.id.listPicker);
+                // TODO: Uncheck all lists in dropdowncheckbox
+                ((TextView) findViewById(R.id.labels)).setText("");
+                updateDueDateValue(todayDate.getYear(), todayDate.getMonthValue(), todayDate.getDayOfMonth(), 19, 0);
+                updateDueDateText();
             }
         });
     }
