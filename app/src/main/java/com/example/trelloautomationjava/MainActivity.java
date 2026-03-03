@@ -35,6 +35,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
     public final String[] MIN_ARR_STR = {"00","05","10","15","20","25","30","35","40","45","50","55"};
     public final int[] HOUR_ARR_INT = {1,2,3,4,5,6,7,8,9,10,11,12};
     public final int[] MIN_ARR_INT = {0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55};
+    boolean[] selecteditems;
     final Handler CreateCardRunnableHandler = new Handler();
     ZoneId zoneId = ZoneId.of("America/Chicago");
     final ZonedDateTime todayDate = now(zoneId);
@@ -251,11 +253,10 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         FlexibleNumberPicker picker = (FlexibleNumberPicker) findViewById(id);
         return LISTS[picker.getValue()];
     }
-
     private void setUpDropdownCheckbox(int id, String[] arr, String title) {
         TextView textView = findViewById(id);
+        selecteditems = new boolean[arr.length];
 
-        boolean[] selecteditems = new boolean[arr.length];
         ArrayList<Integer> itemList = new ArrayList<>();
 
         textView.setOnClickListener(new OnClickListener() {
@@ -320,15 +321,12 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
                 builder.setNeutralButton("Clear All", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        // use for loop
-                        for (int j = 0; j < selecteditems.length; j++) {
-                            // remove all selection
-                            selecteditems[j] = false;
-                            // clear language list
-                            itemList.clear();
-                            // clear text view value
-                            textView.setText("");
-                        }
+                        // remove all selection
+                        Arrays.fill(selecteditems, false);
+                        // clear language list
+                        itemList.clear();
+                        // clear text view value
+                        textView.setText("");
                     }
                 });
                 // show dialog
@@ -417,9 +415,9 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
                 ((TextView) findViewById(R.id.name)).setText("");
                 ((TextView) findViewById(R.id.description)).setText("");
                 ((FlexibleNumberPicker) findViewById(R.id.listPicker)).setValue(todayDate.getDayOfWeek().getValue()-1);
-                String list = getSelectedList(R.id.listPicker);
-                // TODO: Uncheck all lists in dropdowncheckbox
+                Arrays.fill(selecteditems, false);
                 ((TextView) findViewById(R.id.labels)).setText("");
+                ((CheckBox) findViewById(R.id.duedateenabled)).setChecked(true);
                 updateDueDateValue(todayDate.getYear(), todayDate.getMonthValue(), todayDate.getDayOfMonth(), 19, 0);
                 updateDueDateText();
             }
