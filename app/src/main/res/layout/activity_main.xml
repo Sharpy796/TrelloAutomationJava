@@ -171,22 +171,33 @@
             android:layout_alignTop="@+id/duedatelabel"
             android:layout_alignBottom="@+id/duedatelabel"
             android:checked="true"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:buttonTint="@color/text_on_primary"
             android:elevation="4dp"/>
 
         <!-- create card row -->
         <Button
             android:id="@+id/chosen_list_button"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/duedatelabel"
             android:layout_alignStart="@+id/description"
-            android:layout_alignParentStart="true"
-            android:layout_marginHorizontal="40dp"
+            android:layout_marginStart="40dp"
             android:backgroundTint="@color/button_primary"
             android:textColor="@color/text_on_primary"
-            android:text="@string/create_card_button" />
+            android:text="Create Card" />
+
+        <Button
+            android:id="@+id/clear_everything_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/duedatelabel"
+            android:layout_alignStart="@+id/chosen_list_button"
+            android:layout_alignParentStart="true"
+            android:layout_marginEnd="40dp"
+            android:backgroundTint="@color/button_primary"
+            android:textColor="@color/text_on_primary"
+            android:text="Clear"/>
     </RelativeLayout>
 
     <LinearLayout
