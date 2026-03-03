@@ -35,6 +35,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity implements MyRecyclerViewAdapter.ItemClickListener {
@@ -87,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements MyRecyclerViewAda
         LayoutInflater inflater = LayoutInflater.from(this); // or getLayoutInflater() in an Activity
         View linlayout = inflater.inflate(R.layout.datepicker_view, null); // The second argument is the parent ViewGroup, null for now.
         DatePicker dp = (DatePicker) linlayout.findViewById(R.id.datepicker);
+        dp.setFirstDayOfWeek(Calendar.MONDAY);
         dp.updateDate(dueDate.getYear(), dueDate.getMonthValue()-1, dueDate.getDayOfMonth());
         FlexibleNumberPicker hp = (FlexibleNumberPicker) linlayout.findViewById(R.id.hours);
         FlexibleNumberPicker mp = (FlexibleNumberPicker) linlayout.findViewById(R.id.mins);
