@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     String[] STUFF = new String[1];
     final String[] LABELS = cardCreator.getArrayFromJson(cardCreator.getLabels(), "name").toArray(STUFF);
     boolean[] selecteditems;
+    ArrayList<Integer> itemList = new ArrayList<>();
     public final String[] HOUR_ARR_STR = {"01","02","03","04","05","06","07","08","09","10","11","12"};
 //    public final String[]  MIN_ARR_STR = {"00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59"};
     public final String[] MIN_ARR_STR = {"00","05","10","15","20","25","30","35","40","45","50","55"};
@@ -249,8 +250,7 @@ public class MainActivity extends AppCompatActivity {
     private void setUpDropdownCheckbox(int id, String[] arr, String title) {
         TextView textView = findViewById(id);
         selecteditems = new boolean[arr.length];
-
-        ArrayList<Integer> itemList = new ArrayList<>();
+        itemList = new ArrayList<>();
 
         textView.setOnClickListener(new OnClickListener() {
             @Override
@@ -404,6 +404,7 @@ public class MainActivity extends AppCompatActivity {
                 ((TextView) findViewById(R.id.description)).setText("");
                 ((FlexibleNumberPicker) findViewById(R.id.listPicker)).setValue(todayDate.getDayOfWeek().getValue()-1);
                 Arrays.fill(selecteditems, false);
+                itemList.clear();
                 ((TextView) findViewById(R.id.labels)).setText("");
                 ((CheckBox) findViewById(R.id.duedateenabled)).setChecked(true);
                 updateDueDateValue(todayDate.getYear(), todayDate.getMonthValue(), todayDate.getDayOfMonth(), 19, 0);
