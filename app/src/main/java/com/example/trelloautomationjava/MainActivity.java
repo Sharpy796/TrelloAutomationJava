@@ -248,6 +248,7 @@ public class MainActivity extends AppCompatActivity {
         return LISTS[picker.getValue()];
     }
     private void setUpDropdownCheckbox(int id, String[] arr, String title) {
+        Arrays.sort(arr);
         TextView textView = findViewById(id);
         selecteditems = new boolean[arr.length];
         itemList = new ArrayList<>();
