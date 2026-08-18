@@ -16,7 +16,6 @@ import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.NumberPicker;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import androidx.activity.EdgeToEdge;
@@ -46,8 +45,9 @@ public class MainActivity extends AppCompatActivity {
 
     String[] STUFF = new String[1];
     final String[] LABELS = cardCreator.getArrayFromJson(cardCreator.getLabels(), "name").toArray(STUFF);
-    boolean[] selecteditems;
-    ArrayList<Integer> itemList = new ArrayList<>();
+    boolean[] selectedLabelsBoolean; // Used by the dropdowncheckbox to keep track of checkbox values
+    ArrayList<Integer> selectedLabelsIntegers = new ArrayList<>(); // Used by the string formatter and card compiler to figure out list names of selected labels
+    ArrayList<Integer> selectedLabelsIntegersOld = new ArrayList<>(); // Used by the Cancel button in the dropdowncheckbox to retain old chosen labels
     public final String[] HOUR_ARR_STR = {"01","02","03","04","05","06","07","08","09","10","11","12"};
 //    public final String[]  MIN_ARR_STR = {"00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59"};
     public final String[] MIN_ARR_STR = {"00","05","10","15","20","25","30","35","40","45","50","55"};
@@ -250,12 +250,16 @@ public class MainActivity extends AppCompatActivity {
     private void setUpDropdownCheckbox(int id, String[] arr, String title) {
         Arrays.sort(arr);
         TextView textView = findViewById(id);
-        selecteditems = new boolean[arr.length];
-        itemList = new ArrayList<>();
+        selectedLabelsBoolean = new boolean[arr.length];
+        selectedLabelsIntegers = new ArrayList<>();
 
         textView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Remember old values
+                selectedLabelsIntegersOld.clear();
+                selectedLabelsIntegersOld.addAll(selectedLabelsIntegers);
+
                 // Initialize alert dialog
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 
@@ -265,20 +269,20 @@ public class MainActivity extends AppCompatActivity {
                 // set dialog non cancelable
                 builder.setCancelable(false);
 
-                builder.setMultiChoiceItems(arr, selecteditems, new DialogInterface.OnMultiChoiceClickListener() {
+                builder.setMultiChoiceItems(arr, selectedLabelsBoolean, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i, boolean b) {
                         // check condition
                         if (b) {
                             // when checkbox selected
                             // Add position in itemList
-                            itemList.add(i);
+                            selectedLabelsIntegers.add(i);
                             // Sort array list
-                            Collections.sort(itemList);
+                            Collections.sort(selectedLabelsIntegers);
                         } else {
                             // when checkbox unselected
                             // Remove position from itemList
-                            itemList.remove(Integer.valueOf(i));
+                            selectedLabelsIntegers.remove(Integer.valueOf(i));
                         }
                     }
                 });
@@ -289,11 +293,11 @@ public class MainActivity extends AppCompatActivity {
                         // Initialize string builder
                         StringBuilder stringBuilder = new StringBuilder();
                         // use for loop
-                        for (int j = 0; j < itemList.size(); j++) {
+                        for (int j = 0; j < selectedLabelsIntegers.size(); j++) {
                             // concat array value
-                            stringBuilder.append(arr[itemList.get(j)]);
+                            stringBuilder.append(arr[selectedLabelsIntegers.get(j)]);
                             // check condition
-                            if (j != itemList.size() - 1) {
+                            if (j != selectedLabelsIntegers.size() - 1) {
                                 // When j value not equal
                                 // to itemList size - 1
                                 // add comma
@@ -308,6 +312,13 @@ public class MainActivity extends AppCompatActivity {
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        // undo checkboxes
+                        selectedLabelsIntegers.clear();
+                        selectedLabelsIntegers.addAll(selectedLabelsIntegersOld);
+                        Arrays.fill(selectedLabelsBoolean, false);
+                        for (int index : selectedLabelsIntegersOld) {
+                            selectedLabelsBoolean[index] = true;
+                        }
                         // dismiss dialog
                         dialogInterface.dismiss();
                     }
@@ -316,9 +327,9 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         // remove all selection
-                        Arrays.fill(selecteditems, false);
-                        // clear language list
-                        itemList.clear();
+                        Arrays.fill(selectedLabelsBoolean, false);
+                        // clear items list
+                        selectedLabelsIntegers.clear();
                         // clear text view value
                         textView.setText("");
                     }
@@ -404,8 +415,9 @@ public class MainActivity extends AppCompatActivity {
                 ((TextView) findViewById(R.id.name)).setText("");
                 ((TextView) findViewById(R.id.description)).setText("");
                 ((FlexibleNumberPicker) findViewById(R.id.listPicker)).setValue(todayDate.getDayOfWeek().getValue()-1);
-                Arrays.fill(selecteditems, false);
-                itemList.clear();
+                Arrays.fill(selectedLabelsBoolean, false);
+                selectedLabelsIntegers.clear();
+                selectedLabelsIntegersOld.clear();
                 ((TextView) findViewById(R.id.labels)).setText("");
                 ((CheckBox) findViewById(R.id.duedateenabled)).setChecked(true);
                 updateDueDateValue(todayDate.getYear(), todayDate.getMonthValue(), todayDate.getDayOfMonth(), 19, 0);
